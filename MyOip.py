@@ -11,7 +11,6 @@ coef = 0.012890625
 mydata = [(coef * x) for x in mydata]
 
 volt = np.array(mydata)
-volt *= coef
 
 charge = 457/my_t
 finish = my_n/my_t
