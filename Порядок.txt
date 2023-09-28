@@ -29,3 +29,8 @@ C:\stlink-1.7.0-x86_64-w64-mingw32\bin\st-flash --reset write build\test.bin 0x8
 
 test - название проекта, то есть в папке build после make будет единственный bin файл
 его и надо указать st-flash
+
+Базовые вещи (ШИМ, прерывания, таймеры и т.д.) с настройками в CubeMX и готовым кодом
+https://www.micropeta.com/
+https://www.youtube.com/@NizarMohideen
+https://www.youtube.com/playlist?list=PL5e8EBlOu5_P_RV5HJfVLYniii4qZYcp4
