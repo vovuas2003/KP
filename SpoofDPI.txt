@@ -1,3 +1,9 @@
+Fastest way using file that was downloaded from https://github.com/xvzc/SpoofDPI/releases
+1) Copy spoofdpi_linux_amd64 from USB to any directory
+2) chmod +x spoofdpi_linux_amd64
+3) ./spoofdpi_linux_amd64
+4) Switch proxy (both http and https) in Firefox settings from system to manual 127.0.0.1:8080
+
 https://github.com/xvzc/SpoofDPI
 curl -fsSL https://raw.githubusercontent.com/xvzc/SpoofDPI/main/install.sh | bash -s linux-amd64
 Or download release from github with spoofdpi binary file and put it to any directory.
