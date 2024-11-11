@@ -1,6 +1,6 @@
 su -
 ls -l /dev/sd?
-dd if=name.iso of=/dev/sdx oflag=direct status=progress
+dd if=name.iso of=/dev/sdx oflag=direct status=progress bs=4M
 
 su -
 nano /etc/default/grub
