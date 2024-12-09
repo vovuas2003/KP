@@ -1,0 +1,14 @@
+Ссылка на мой краткий конспект о том, как программировать stm32: github.com/vovuas2003/KP/blob/main/Порядок.txt
+Ссылка на проект: github.com/vovuas2003/KP/tree/main/STM32_project
+Забыл сказать про установку драйвера для программатора и про обновление прошивки программатора (может потребоваться, см. мой файл "Порядок.txt" по первой ссылке выше)
+Либо используйте STM32CubeIDE, по ссылке ниже можно найти обучающее видео про эту среду разработки (весь путь написания программы для мигания светодиодом вплоть до заливки программы на плату через STM32CubeIDE).
+
+Прекрасные туториалы про базовые вещи (текстовые и видео уроки, все 3 ссылки это одно и то же):
+www.micropeta.com
+https://www.youtube.com/channel/UCwFdriSdz5wqI39ot2WS7pw 
+https://www.youtube.com/playlist?list=PL5e8EBlOu5_P_RV5HJfVLYniii4qZYcp4
+Я использовал оттуда 3 урока:
+www.micropeta.com/video34 (прерывание на кнопке)
+www.micropeta.com/video62 (прерывание по таймеру)
+www.micropeta.com/video42 (датчик расстояния)
+Библиотека для дисплея (надо увеличить задержки _tm1637DelayUsec в 10 раз или см. мой вариант с таймером в конце STM32_project/Core/Src/main.c): github.com/rogerdahl/stm32-tm1637
