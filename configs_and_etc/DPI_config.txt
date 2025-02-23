@@ -1,0 +1,9 @@
+https://github.com/hufrea/byedpi
+ciadpi.exe --ip 127.0.0.1 --port 8080 -n "www.google.com" -q 1+s -O 1 -s 25+s -t 5 -a 2
+
+proxy server SOCKS, for example for Windows proxy settings (Win+S, proxy)
+NOT http://socks=127.0.0.1 BUT socks=127.0.0.1, port 8080
+
+1_button.bat:
+start "Close after exiting Google Chrome" ciadpi.exe --ip 127.0.0.1 --port 8080 -n "www.google.com" -q 1+s -O 1 -s 25+s -t 5 -a 2
+start "" "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" --proxy-server="socks://127.0.0.1:8080"

@@ -1,0 +1,57 @@
+Fastest way using file that was downloaded from https://github.com/xvzc/SpoofDPI/releases
+1) Copy spoofdpi_linux_amd64 from USB to any directory
+2) chmod +x spoofdpi_linux_amd64
+3) ./spoofdpi_linux_amd64
+4) Switch proxy (both http and https) in Firefox settings from system to manual 127.0.0.1:8080
+
+https://github.com/xvzc/SpoofDPI
+curl -fsSL https://raw.githubusercontent.com/xvzc/SpoofDPI/main/install.sh | bash -s linux-amd64
+Or download release from github with spoofdpi binary file and put it to any directory.
+
+If you want run from any directory
+=================================================================
+Successfully installed SpoofDPI.
+Please add the line below to your rcfile(.bashrc or .zshrc etc..)
+
+>>    export PATH=$PATH:~/.spoofdpi/bin
+=================================================================
+
+1. ~/.spoofdpi/bin/spoofdpi (Or your own path to extracted release)
+2. Open Firefox and switch proxy from system to manual 127.0.0.1:8080
+3. Work in web.
+4. ctrl+c in spoofdpi terminal
+5. Return Firefox proxy settings to system.
+
+Developer suggests (instead of 2. above) to start browser from terminal with option:
+google-chrome --proxy-server="http://127.0.0.1:8080"
+But I don't understand how to run firefox like these (no such option maybe at all)
+
+Usage: spoofdpi [options...]
+  -addr string
+        listen address (default "127.0.0.1")
+  -debug
+        enable debug output
+  -dns-addr string
+        dns address (default "8.8.8.8")
+  -dns-ipv4-only
+        resolve only version 4 addresses
+  -dns-port value
+        port number for dns (default 53)
+  -enable-doh
+        enable 'dns-over-https'
+  -pattern value
+        bypass DPI only on packets matching this regex pattern; can be given multiple times
+  -port value
+        port (default 8080)
+  -silent
+        do not show the banner and server information at start up
+  -system-proxy
+        enable system-wide proxy (default true)
+  -timeout value
+        timeout in milliseconds; no timeout when not given
+  -v    print spoofdpi's version; this may contain some other relevant information
+  -window-size value
+        chunk size, in number of bytes, for fragmented client hello,
+        try lower values if the default value doesn't bypass the DPI;
+        when not given, the client hello packet will be sent in two parts:
+        fragmentation for the first data packet and the rest

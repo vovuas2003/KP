@@ -1,0 +1,21 @@
+sudo apt install python3.12-venv
+python3 -m venv ./McEliece
+source ./McEliece/bin/activate
+pip install numpy
+python3 main.py
+deactivate
+
+For example, we create venv in my_projects dir like above.
+It is good to create McEliece_source dir in my_projects,
+and make run.sh file inside McEliece_source like below;
+chmod +x run.sh; ./run.sh filename.py
+
+#!/bin/bash
+if [ -n "$1" ]
+then
+  source ../McEliece/bin/activate
+  python3 $1
+  deactivate
+else
+  echo "Usage: run.sh name.py"
+fi
