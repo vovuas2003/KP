@@ -1,0 +1,1 @@
+C:\stlink-1.7.0-x86_64-w64-mingw32\bin\st-flash --reset write build\Final.bin 0x8000000

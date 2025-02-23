@@ -1,0 +1,9 @@
+Прекрасные туториалы про базовые вещи (текстовые и видео уроки, все 3 ссылки это одно и то же):
+www.micropeta.com
+https://www.youtube.com/channel/UCwFdriSdz5wqI39ot2WS7pw 
+https://www.youtube.com/playlist?list=PL5e8EBlOu5_P_RV5HJfVLYniii4qZYcp4
+Я использовал оттуда 3 урока:
+www.micropeta.com/video34 (прерывание на кнопке)
+www.micropeta.com/video62 (прерывание по таймеру)
+www.micropeta.com/video42 (датчик расстояния)
+Библиотека для дисплея (надо увеличить задержки _tm1637DelayUsec в 10 раз или см. мой вариант с таймером в конце STM32_project/Core/Src/main.c): github.com/rogerdahl/stm32-tm1637

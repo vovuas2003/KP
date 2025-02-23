@@ -1,0 +1,15 @@
+stm32cubeMX http://www.stm32res.ru/ru/newsarhivprog
+st-link V2 drivers and firmware upgrade from official ST site under VPN (or maybe link above)
+!!! CubeMX 6.3 https://forum.maxiol.com/index.php?showtopic=5497 (or maybe https://stm32cubemx.software.informer.com/6.3/)
+st-link V2 flash https://github.com/stlink-org/stlink/releases
+gcc and make (mingw for windows i686-12.2.0-release-posix-dwarf-rt_v10-rev0.7z) https://github.com/niXman/mingw-builds-binaries/releases
+
+Firmware libs (official maybe not full https://github.com/STMicroelectronics/STM32CubeF4 for f407, https://github.com/STMicroelectronics/STM32CubeF1 for f103 "blue pill")
+Better from here:
+https://vk.com/wall-196464827_910
+https://disk.yandex.ru/d/ScP8Hb8AdG3v5Q/Repository
+
+gnu arm embedded toolchain
+gcc-arm-none-eabi-5_4-2016q3-20160926-win32.zip
+!!!extract and add "bin" folder to PATH (win+r, systempropertiesadvanced, environmental variables)
+https://launchpad.net/gcc-arm-embedded/+download

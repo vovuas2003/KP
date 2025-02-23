@@ -1,0 +1,20 @@
+I didn't use cubeide, so did't check this guide.
+
+!!!Upgrade ST-Link V2 programmer firmware from stsw folder
+!!!Install driver for programmer from en.stsw folder (dpinst amd for win64)
+
+Install from exe.
+Start new project.
+Part number: stm32f103c8t6 (blue pill, in cubeide it is maybe ...c8tx).
+Name your project.
+Open perspective (yes).
+Pinout -> system core -> sys -> debug -> serial wire.
+Set necessary pins.
+Save (crtl+S or icon up left corner). Yes, yes.
+Edit main.c (crtl+space is auto-completion), save.
+Build (build "debug" icon is right from save icon). It is compilation.
+Don't forget to connect stm32 blue pill board via USB ST-Link V2 programmer.
+Run (green icon). It is uploading code into stm23 blue pill board.
+Debugger -> debug probe -> OpenOCD.
+Show generation options (in debugger) -> reset mode -> software system reset.
+Apply, ok, wait a bit (until "shutdown command invoked").

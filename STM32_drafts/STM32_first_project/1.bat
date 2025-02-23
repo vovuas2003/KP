@@ -1,0 +1,1 @@
+C:\MinGWold\mingw32\bin\mingw32-make

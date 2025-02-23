@@ -1,0 +1,2724 @@
+ARM GAS  C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s 			page 1
+
+
+   1              		.cpu cortex-m3
+   2              		.arch armv7-m
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"main.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.file 1 "Core/Src/main.c"
+  18              		.section	.text.MX_GPIO_Init,"ax",%progbits
+  19              		.align	1
+  20              		.syntax unified
+  21              		.thumb
+  22              		.thumb_func
+  24              	MX_GPIO_Init:
+  25              	.LFB69:
+   1:Core/Src/main.c **** /* USER CODE BEGIN Header */
+   2:Core/Src/main.c **** /**
+   3:Core/Src/main.c ****   ******************************************************************************
+   4:Core/Src/main.c ****   * @file           : main.c
+   5:Core/Src/main.c ****   * @brief          : Main program body
+   6:Core/Src/main.c ****   ******************************************************************************
+   7:Core/Src/main.c ****   * @attention
+   8:Core/Src/main.c ****   *
+   9:Core/Src/main.c ****   * Copyright (c) 2023 STMicroelectronics.
+  10:Core/Src/main.c ****   * All rights reserved.
+  11:Core/Src/main.c ****   *
+  12:Core/Src/main.c ****   * This software is licensed under terms that can be found in the LICENSE file
+  13:Core/Src/main.c ****   * in the root directory of this software component.
+  14:Core/Src/main.c ****   * If no LICENSE file comes with this software, it is provided AS-IS.
+  15:Core/Src/main.c ****   *
+  16:Core/Src/main.c ****   ******************************************************************************
+  17:Core/Src/main.c ****   */
+  18:Core/Src/main.c **** /* USER CODE END Header */
+  19:Core/Src/main.c **** /* Includes ------------------------------------------------------------------*/
+  20:Core/Src/main.c **** #include "main.h"
+  21:Core/Src/main.c **** 
+  22:Core/Src/main.c **** /* Private includes ----------------------------------------------------------*/
+  23:Core/Src/main.c **** /* USER CODE BEGIN Includes */
+  24:Core/Src/main.c **** /* USER CODE END Includes */
+  25:Core/Src/main.c **** 
+  26:Core/Src/main.c **** /* Private typedef -----------------------------------------------------------*/
+  27:Core/Src/main.c **** /* USER CODE BEGIN PTD */
+  28:Core/Src/main.c **** /* USER CODE END PTD */
+  29:Core/Src/main.c **** 
+  30:Core/Src/main.c **** /* Private define ------------------------------------------------------------*/
+  31:Core/Src/main.c **** /* USER CODE BEGIN PD */
+  32:Core/Src/main.c **** #define TRIG_PIN GPIO_PIN_9
+  33:Core/Src/main.c **** #define TRIG_PORT GPIOA
+ARM GAS  C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s 			page 2
+
+
+  34:Core/Src/main.c **** #define ECHO_PIN GPIO_PIN_8
+  35:Core/Src/main.c **** #define ECHO_PORT GPIOA
+  36:Core/Src/main.c **** #define CLK_PORT GPIOB
+  37:Core/Src/main.c **** #define DIO_PORT GPIOB
+  38:Core/Src/main.c **** #define CLK_PIN GPIO_PIN_9
+  39:Core/Src/main.c **** #define DIO_PIN GPIO_PIN_8
+  40:Core/Src/main.c **** /* USER CODE END PD */
+  41:Core/Src/main.c **** 
+  42:Core/Src/main.c **** /* Private macro -------------------------------------------------------------*/
+  43:Core/Src/main.c **** /* USER CODE BEGIN PM */
+  44:Core/Src/main.c **** /* USER CODE END PM */
+  45:Core/Src/main.c **** 
+  46:Core/Src/main.c **** /* Private variables ---------------------------------------------------------*/
+  47:Core/Src/main.c **** TIM_HandleTypeDef htim1;
+  48:Core/Src/main.c **** TIM_HandleTypeDef htim2;
+  49:Core/Src/main.c **** 
+  50:Core/Src/main.c **** /* USER CODE BEGIN PV */
+  51:Core/Src/main.c **** uint32_t pMillis;
+  52:Core/Src/main.c **** uint32_t Value1 = 0;
+  53:Core/Src/main.c **** uint32_t Value2 = 0;
+  54:Core/Src/main.c **** uint16_t Distance  = 0;
+  55:Core/Src/main.c **** uint16_t Saved  = 0;
+  56:Core/Src/main.c **** uint16_t Temp  = 0;
+  57:Core/Src/main.c **** uint8_t Flag = 0;
+  58:Core/Src/main.c **** uint32_t previousMillis = 0;
+  59:Core/Src/main.c **** uint32_t currentMillis = 0;
+  60:Core/Src/main.c **** /* USER CODE END PV */
+  61:Core/Src/main.c **** 
+  62:Core/Src/main.c **** /* Private function prototypes -----------------------------------------------*/
+  63:Core/Src/main.c **** void SystemClock_Config(void);
+  64:Core/Src/main.c **** static void MX_GPIO_Init(void);
+  65:Core/Src/main.c **** static void MX_TIM1_Init(void);
+  66:Core/Src/main.c **** static void MX_TIM2_Init(void);
+  67:Core/Src/main.c **** /* USER CODE BEGIN PFP */
+  68:Core/Src/main.c **** void tm1637DisplayDecimal(int);
+  69:Core/Src/main.c **** void tm1637SetBrightness(char);
+  70:Core/Src/main.c **** void _tm1637Start();
+  71:Core/Src/main.c **** void _tm1637Stop();
+  72:Core/Src/main.c **** void _tm1637ReadResult();
+  73:Core/Src/main.c **** void _tm1637WriteByte(unsigned char);
+  74:Core/Src/main.c **** void _tm1637DelayUsec(unsigned int);
+  75:Core/Src/main.c **** void _tm1637ClkHigh();
+  76:Core/Src/main.c **** void _tm1637ClkLow();
+  77:Core/Src/main.c **** void _tm1637DioHigh();
+  78:Core/Src/main.c **** void _tm1637DioLow();
+  79:Core/Src/main.c **** /* USER CODE END PFP */
+  80:Core/Src/main.c **** 
+  81:Core/Src/main.c **** /* Private user code ---------------------------------------------------------*/
+  82:Core/Src/main.c **** /* USER CODE BEGIN 0 */
+  83:Core/Src/main.c **** /* USER CODE END 0 */
+  84:Core/Src/main.c **** 
+  85:Core/Src/main.c **** /**
+  86:Core/Src/main.c ****   * @brief  The application entry point.
+  87:Core/Src/main.c ****   * @retval int
+  88:Core/Src/main.c ****   */
+  89:Core/Src/main.c **** int main(void)
+  90:Core/Src/main.c **** {
+ARM GAS  C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s 			page 3
+
+
+  91:Core/Src/main.c ****   /* USER CODE BEGIN 1 */
+  92:Core/Src/main.c ****   /* USER CODE END 1 */
+  93:Core/Src/main.c **** 
+  94:Core/Src/main.c ****   /* MCU Configuration--------------------------------------------------------*/
+  95:Core/Src/main.c **** 
+  96:Core/Src/main.c ****   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
+  97:Core/Src/main.c ****   HAL_Init();
+  98:Core/Src/main.c **** 
+  99:Core/Src/main.c ****   /* USER CODE BEGIN Init */
+ 100:Core/Src/main.c ****   /* USER CODE END Init */
+ 101:Core/Src/main.c **** 
+ 102:Core/Src/main.c ****   /* Configure the system clock */
+ 103:Core/Src/main.c ****   SystemClock_Config();
+ 104:Core/Src/main.c **** 
+ 105:Core/Src/main.c ****   /* USER CODE BEGIN SysInit */
+ 106:Core/Src/main.c ****   /* USER CODE END SysInit */
+ 107:Core/Src/main.c **** 
+ 108:Core/Src/main.c ****   /* Initialize all configured peripherals */
+ 109:Core/Src/main.c ****   MX_GPIO_Init();
+ 110:Core/Src/main.c ****   MX_TIM1_Init();
+ 111:Core/Src/main.c ****   MX_TIM2_Init();
+ 112:Core/Src/main.c ****   /* USER CODE BEGIN 2 */
+ 113:Core/Src/main.c ****   HAL_TIM_Base_Start(&htim1);
+ 114:Core/Src/main.c ****   HAL_GPIO_WritePin(TRIG_PORT, TRIG_PIN, GPIO_PIN_RESET);
+ 115:Core/Src/main.c ****   tm1637SetBrightness(8);
+ 116:Core/Src/main.c ****   HAL_TIM_Base_Start_IT(&htim2);
+ 117:Core/Src/main.c ****   /* USER CODE END 2 */
+ 118:Core/Src/main.c **** 
+ 119:Core/Src/main.c ****   /* Infinite loop */
+ 120:Core/Src/main.c ****   /* USER CODE BEGIN WHILE */
+ 121:Core/Src/main.c ****   while (1)
+ 122:Core/Src/main.c ****   {
+ 123:Core/Src/main.c ****     /* USER CODE END WHILE */
+ 124:Core/Src/main.c **** 
+ 125:Core/Src/main.c ****     /* USER CODE BEGIN 3 */
+ 126:Core/Src/main.c ****   }
+ 127:Core/Src/main.c ****   /* USER CODE END 3 */
+ 128:Core/Src/main.c **** }
+ 129:Core/Src/main.c **** 
+ 130:Core/Src/main.c **** /**
+ 131:Core/Src/main.c ****   * @brief System Clock Configuration
+ 132:Core/Src/main.c ****   * @retval None
+ 133:Core/Src/main.c ****   */
+ 134:Core/Src/main.c **** void SystemClock_Config(void)
+ 135:Core/Src/main.c **** {
+ 136:Core/Src/main.c ****   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
+ 137:Core/Src/main.c ****   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
+ 138:Core/Src/main.c **** 
+ 139:Core/Src/main.c ****   /** Initializes the RCC Oscillators according to the specified parameters
+ 140:Core/Src/main.c ****   * in the RCC_OscInitTypeDef structure.
+ 141:Core/Src/main.c ****   */
+ 142:Core/Src/main.c ****   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
+ 143:Core/Src/main.c ****   RCC_OscInitStruct.HSEState = RCC_HSE_ON;
+ 144:Core/Src/main.c ****   RCC_OscInitStruct.HSEPredivValue = RCC_HSE_PREDIV_DIV1;
+ 145:Core/Src/main.c ****   RCC_OscInitStruct.HSIState = RCC_HSI_ON;
+ 146:Core/Src/main.c ****   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
+ 147:Core/Src/main.c ****   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
+ARM GAS  C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s 			page 4
+
+
+ 148:Core/Src/main.c ****   RCC_OscInitStruct.PLL.PLLMUL = RCC_PLL_MUL9;
+ 149:Core/Src/main.c ****   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
+ 150:Core/Src/main.c ****   {
+ 151:Core/Src/main.c ****     Error_Handler();
+ 152:Core/Src/main.c ****   }
+ 153:Core/Src/main.c **** 
+ 154:Core/Src/main.c ****   /** Initializes the CPU, AHB and APB buses clocks
+ 155:Core/Src/main.c ****   */
+ 156:Core/Src/main.c ****   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
+ 157:Core/Src/main.c ****                               |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
+ 158:Core/Src/main.c ****   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
+ 159:Core/Src/main.c ****   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
+ 160:Core/Src/main.c ****   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV2;
+ 161:Core/Src/main.c ****   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
+ 162:Core/Src/main.c **** 
+ 163:Core/Src/main.c ****   if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_2) != HAL_OK)
+ 164:Core/Src/main.c ****   {
+ 165:Core/Src/main.c ****     Error_Handler();
+ 166:Core/Src/main.c ****   }
+ 167:Core/Src/main.c **** }
+ 168:Core/Src/main.c **** 
+ 169:Core/Src/main.c **** /**
+ 170:Core/Src/main.c ****   * @brief TIM1 Initialization Function
+ 171:Core/Src/main.c ****   * @param None
+ 172:Core/Src/main.c ****   * @retval None
+ 173:Core/Src/main.c ****   */
+ 174:Core/Src/main.c **** static void MX_TIM1_Init(void)
+ 175:Core/Src/main.c **** {
+ 176:Core/Src/main.c **** 
+ 177:Core/Src/main.c ****   /* USER CODE BEGIN TIM1_Init 0 */
+ 178:Core/Src/main.c ****   /* USER CODE END TIM1_Init 0 */
+ 179:Core/Src/main.c **** 
+ 180:Core/Src/main.c ****   TIM_ClockConfigTypeDef sClockSourceConfig = {0};
+ 181:Core/Src/main.c ****   TIM_MasterConfigTypeDef sMasterConfig = {0};
+ 182:Core/Src/main.c **** 
+ 183:Core/Src/main.c ****   /* USER CODE BEGIN TIM1_Init 1 */
+ 184:Core/Src/main.c ****   /* USER CODE END TIM1_Init 1 */
+ 185:Core/Src/main.c ****   htim1.Instance = TIM1;
+ 186:Core/Src/main.c ****   htim1.Init.Prescaler = 71;
+ 187:Core/Src/main.c ****   htim1.Init.CounterMode = TIM_COUNTERMODE_UP;
+ 188:Core/Src/main.c ****   htim1.Init.Period = 65535;
+ 189:Core/Src/main.c ****   htim1.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+ 190:Core/Src/main.c ****   htim1.Init.RepetitionCounter = 0;
+ 191:Core/Src/main.c ****   htim1.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+ 192:Core/Src/main.c ****   if (HAL_TIM_Base_Init(&htim1) != HAL_OK)
+ 193:Core/Src/main.c ****   {
+ 194:Core/Src/main.c ****     Error_Handler();
+ 195:Core/Src/main.c ****   }
+ 196:Core/Src/main.c ****   sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+ 197:Core/Src/main.c ****   if (HAL_TIM_ConfigClockSource(&htim1, &sClockSourceConfig) != HAL_OK)
+ 198:Core/Src/main.c ****   {
+ 199:Core/Src/main.c ****     Error_Handler();
+ 200:Core/Src/main.c ****   }
+ 201:Core/Src/main.c ****   sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+ 202:Core/Src/main.c ****   sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+ 203:Core/Src/main.c ****   if (HAL_TIMEx_MasterConfigSynchronization(&htim1, &sMasterConfig) != HAL_OK)
+ 204:Core/Src/main.c ****   {
+ARM GAS  C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s 			page 5
+
+
+ 205:Core/Src/main.c ****     Error_Handler();
+ 206:Core/Src/main.c ****   }
+ 207:Core/Src/main.c ****   /* USER CODE BEGIN TIM1_Init 2 */
+ 208:Core/Src/main.c ****   /* USER CODE END TIM1_Init 2 */
+ 209:Core/Src/main.c **** 
+ 210:Core/Src/main.c **** }
+ 211:Core/Src/main.c **** 
+ 212:Core/Src/main.c **** /**
+ 213:Core/Src/main.c ****   * @brief TIM2 Initialization Function
+ 214:Core/Src/main.c ****   * @param None
+ 215:Core/Src/main.c ****   * @retval None
+ 216:Core/Src/main.c ****   */
+ 217:Core/Src/main.c **** static void MX_TIM2_Init(void)
+ 218:Core/Src/main.c **** {
+ 219:Core/Src/main.c **** 
+ 220:Core/Src/main.c ****   /* USER CODE BEGIN TIM2_Init 0 */
+ 221:Core/Src/main.c ****   /* USER CODE END TIM2_Init 0 */
+ 222:Core/Src/main.c **** 
+ 223:Core/Src/main.c ****   TIM_ClockConfigTypeDef sClockSourceConfig = {0};
+ 224:Core/Src/main.c ****   TIM_MasterConfigTypeDef sMasterConfig = {0};
+ 225:Core/Src/main.c **** 
+ 226:Core/Src/main.c ****   /* USER CODE BEGIN TIM2_Init 1 */
+ 227:Core/Src/main.c ****   /* USER CODE END TIM2_Init 1 */
+ 228:Core/Src/main.c ****   htim2.Instance = TIM2;
+ 229:Core/Src/main.c ****   htim2.Init.Prescaler = 7200-1;
+ 230:Core/Src/main.c ****   htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
+ 231:Core/Src/main.c ****   htim2.Init.Period = 2000;
+ 232:Core/Src/main.c ****   htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+ 233:Core/Src/main.c ****   htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+ 234:Core/Src/main.c ****   if (HAL_TIM_Base_Init(&htim2) != HAL_OK)
+ 235:Core/Src/main.c ****   {
+ 236:Core/Src/main.c ****     Error_Handler();
+ 237:Core/Src/main.c ****   }
+ 238:Core/Src/main.c ****   sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+ 239:Core/Src/main.c ****   if (HAL_TIM_ConfigClockSource(&htim2, &sClockSourceConfig) != HAL_OK)
+ 240:Core/Src/main.c ****   {
+ 241:Core/Src/main.c ****     Error_Handler();
+ 242:Core/Src/main.c ****   }
+ 243:Core/Src/main.c ****   sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+ 244:Core/Src/main.c ****   sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+ 245:Core/Src/main.c ****   if (HAL_TIMEx_MasterConfigSynchronization(&htim2, &sMasterConfig) != HAL_OK)
+ 246:Core/Src/main.c ****   {
+ 247:Core/Src/main.c ****     Error_Handler();
+ 248:Core/Src/main.c ****   }
+ 249:Core/Src/main.c ****   /* USER CODE BEGIN TIM2_Init 2 */
+ 250:Core/Src/main.c ****   /* USER CODE END TIM2_Init 2 */
+ 251:Core/Src/main.c **** 
+ 252:Core/Src/main.c **** }
+ 253:Core/Src/main.c **** 
+ 254:Core/Src/main.c **** /**
+ 255:Core/Src/main.c ****   * @brief GPIO Initialization Function
+ 256:Core/Src/main.c ****   * @param None
+ 257:Core/Src/main.c ****   * @retval None
+ 258:Core/Src/main.c ****   */
+ 259:Core/Src/main.c **** static void MX_GPIO_Init(void)
+ 260:Core/Src/main.c **** {
+  26              		.loc 1 260 1 view -0
+ARM GAS  C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s 			page 6
+
+
+  27              		.cfi_startproc
+  28              		@ args = 0, pretend = 0, frame = 32
+  29              		@ frame_needed = 0, uses_anonymous_args = 0
+  30 0000 2DE9F041 		push	{r4, r5, r6, r7, r8, lr}
+  31              	.LCFI0:
+  32              		.cfi_def_cfa_offset 24
+  33              		.cfi_offset 4, -24
+  34              		.cfi_offset 5, -20
+  35              		.cfi_offset 6, -16
+  36              		.cfi_offset 7, -12
+  37              		.cfi_offset 8, -8
+  38              		.cfi_offset 14, -4
+  39 0004 88B0     		sub	sp, sp, #32
+  40              	.LCFI1:
+  41              		.cfi_def_cfa_offset 56
+ 261:Core/Src/main.c ****   GPIO_InitTypeDef GPIO_InitStruct = {0};
+  42              		.loc 1 261 3 view .LVU1
+  43              		.loc 1 261 20 is_stmt 0 view .LVU2
+  44 0006 0024     		movs	r4, #0
+  45 0008 0494     		str	r4, [sp, #16]
+  46 000a 0594     		str	r4, [sp, #20]
+  47 000c 0694     		str	r4, [sp, #24]
+  48 000e 0794     		str	r4, [sp, #28]
+ 262:Core/Src/main.c **** 
+ 263:Core/Src/main.c ****   /* GPIO Ports Clock Enable */
+ 264:Core/Src/main.c ****   __HAL_RCC_GPIOD_CLK_ENABLE();
+  49              		.loc 1 264 3 is_stmt 1 view .LVU3
+  50              	.LBB4:
+  51              		.loc 1 264 3 view .LVU4
+  52              		.loc 1 264 3 view .LVU5
+  53 0010 304B     		ldr	r3, .L3
+  54 0012 9A69     		ldr	r2, [r3, #24]
+  55 0014 42F02002 		orr	r2, r2, #32
+  56 0018 9A61     		str	r2, [r3, #24]
+  57              		.loc 1 264 3 view .LVU6
+  58 001a 9A69     		ldr	r2, [r3, #24]
+  59 001c 02F02002 		and	r2, r2, #32
+  60 0020 0192     		str	r2, [sp, #4]
+  61              		.loc 1 264 3 view .LVU7
+  62 0022 019A     		ldr	r2, [sp, #4]
+  63              	.LBE4:
+  64              		.loc 1 264 3 view .LVU8
+ 265:Core/Src/main.c ****   __HAL_RCC_GPIOA_CLK_ENABLE();
+  65              		.loc 1 265 3 view .LVU9
+  66              	.LBB5:
+  67              		.loc 1 265 3 view .LVU10
+  68              		.loc 1 265 3 view .LVU11
+  69 0024 9A69     		ldr	r2, [r3, #24]
+  70 0026 42F00402 		orr	r2, r2, #4
+  71 002a 9A61     		str	r2, [r3, #24]
+  72              		.loc 1 265 3 view .LVU12
+  73 002c 9A69     		ldr	r2, [r3, #24]
+  74 002e 02F00402 		and	r2, r2, #4
+  75 0032 0292     		str	r2, [sp, #8]
+  76              		.loc 1 265 3 view .LVU13
+  77 0034 029A     		ldr	r2, [sp, #8]
+  78              	.LBE5:
+ARM GAS  C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s 			page 7
+
+
+  79              		.loc 1 265 3 view .LVU14
+ 266:Core/Src/main.c ****   __HAL_RCC_GPIOB_CLK_ENABLE();
+  80              		.loc 1 266 3 view .LVU15
+  81              	.LBB6:
+  82              		.loc 1 266 3 view .LVU16
+  83              		.loc 1 266 3 view .LVU17
+  84 0036 9A69     		ldr	r2, [r3, #24]
+  85 0038 42F00802 		orr	r2, r2, #8
+  86 003c 9A61     		str	r2, [r3, #24]
+  87              		.loc 1 266 3 view .LVU18
+  88 003e 9B69     		ldr	r3, [r3, #24]
+  89 0040 03F00803 		and	r3, r3, #8
+  90 0044 0393     		str	r3, [sp, #12]
+  91              		.loc 1 266 3 view .LVU19
+  92 0046 039B     		ldr	r3, [sp, #12]
+  93              	.LBE6:
+  94              		.loc 1 266 3 view .LVU20
+ 267:Core/Src/main.c **** 
+ 268:Core/Src/main.c ****   /*Configure GPIO pin Output Level */
+ 269:Core/Src/main.c ****   HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1|GPIO_PIN_9, GPIO_PIN_RESET);
+  95              		.loc 1 269 3 view .LVU21
+  96 0048 234E     		ldr	r6, .L3+4
+  97 004a 2246     		mov	r2, r4
+  98 004c 40F20221 		movw	r1, #514
+  99 0050 3046     		mov	r0, r6
+ 100 0052 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 101              	.LVL0:
+ 270:Core/Src/main.c **** 
+ 271:Core/Src/main.c ****   /*Configure GPIO pin Output Level */
+ 272:Core/Src/main.c ****   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8|GPIO_PIN_9, GPIO_PIN_RESET);
+ 102              		.loc 1 272 3 view .LVU22
+ 103 0056 214D     		ldr	r5, .L3+8
+ 104 0058 2246     		mov	r2, r4
+ 105 005a 4FF44071 		mov	r1, #768
+ 106 005e 2846     		mov	r0, r5
+ 107 0060 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 108              	.LVL1:
+ 273:Core/Src/main.c **** 
+ 274:Core/Src/main.c ****   /*Configure GPIO pins : PA1 PA9 */
+ 275:Core/Src/main.c ****   GPIO_InitStruct.Pin = GPIO_PIN_1|GPIO_PIN_9;
+ 109              		.loc 1 275 3 view .LVU23
+ 110              		.loc 1 275 23 is_stmt 0 view .LVU24
+ 111 0064 40F20223 		movw	r3, #514
+ 112 0068 0493     		str	r3, [sp, #16]
+ 276:Core/Src/main.c ****   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+ 113              		.loc 1 276 3 is_stmt 1 view .LVU25
+ 114              		.loc 1 276 24 is_stmt 0 view .LVU26
+ 115 006a 0127     		movs	r7, #1
+ 116 006c 0597     		str	r7, [sp, #20]
+ 277:Core/Src/main.c ****   GPIO_InitStruct.Pull = GPIO_NOPULL;
+ 117              		.loc 1 277 3 is_stmt 1 view .LVU27
+ 118              		.loc 1 277 24 is_stmt 0 view .LVU28
+ 119 006e 0694     		str	r4, [sp, #24]
+ 278:Core/Src/main.c ****   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+ 120              		.loc 1 278 3 is_stmt 1 view .LVU29
+ 121              		.loc 1 278 25 is_stmt 0 view .LVU30
+ 122 0070 4FF00208 		mov	r8, #2
+ARM GAS  C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s 			page 8
+
+
+ 123 0074 CDF81C80 		str	r8, [sp, #28]
+ 279:Core/Src/main.c ****   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+ 124              		.loc 1 279 3 is_stmt 1 view .LVU31
+ 125 0078 04A9     		add	r1, sp, #16
+ 126 007a 3046     		mov	r0, r6
+ 127 007c FFF7FEFF 		bl	HAL_GPIO_Init
+ 128              	.LVL2:
+ 280:Core/Src/main.c **** 
+ 281:Core/Src/main.c ****   /*Configure GPIO pin : PB1 */
+ 282:Core/Src/main.c ****   GPIO_InitStruct.Pin = GPIO_PIN_1;
+ 129              		.loc 1 282 3 view .LVU32
+ 130              		.loc 1 282 23 is_stmt 0 view .LVU33
+ 131 0080 CDF81080 		str	r8, [sp, #16]
+ 283:Core/Src/main.c ****   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING_FALLING;
+ 132              		.loc 1 283 3 is_stmt 1 view .LVU34
+ 133              		.loc 1 283 24 is_stmt 0 view .LVU35
+ 134 0084 164B     		ldr	r3, .L3+12
+ 135 0086 0593     		str	r3, [sp, #20]
+ 284:Core/Src/main.c ****   GPIO_InitStruct.Pull = GPIO_NOPULL;
+ 136              		.loc 1 284 3 is_stmt 1 view .LVU36
+ 137              		.loc 1 284 24 is_stmt 0 view .LVU37
+ 138 0088 0694     		str	r4, [sp, #24]
+ 285:Core/Src/main.c ****   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+ 139              		.loc 1 285 3 is_stmt 1 view .LVU38
+ 140 008a 04A9     		add	r1, sp, #16
+ 141 008c 2846     		mov	r0, r5
+ 142 008e FFF7FEFF 		bl	HAL_GPIO_Init
+ 143              	.LVL3:
+ 286:Core/Src/main.c **** 
+ 287:Core/Src/main.c ****   /*Configure GPIO pin : PA8 */
+ 288:Core/Src/main.c ****   GPIO_InitStruct.Pin = GPIO_PIN_8;
+ 144              		.loc 1 288 3 view .LVU39
+ 145              		.loc 1 288 23 is_stmt 0 view .LVU40
+ 146 0092 4FF48073 		mov	r3, #256
+ 147 0096 0493     		str	r3, [sp, #16]
+ 289:Core/Src/main.c ****   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+ 148              		.loc 1 289 3 is_stmt 1 view .LVU41
+ 149              		.loc 1 289 24 is_stmt 0 view .LVU42
+ 150 0098 0594     		str	r4, [sp, #20]
+ 290:Core/Src/main.c ****   GPIO_InitStruct.Pull = GPIO_NOPULL;
+ 151              		.loc 1 290 3 is_stmt 1 view .LVU43
+ 152              		.loc 1 290 24 is_stmt 0 view .LVU44
+ 153 009a 0694     		str	r4, [sp, #24]
+ 291:Core/Src/main.c ****   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+ 154              		.loc 1 291 3 is_stmt 1 view .LVU45
+ 155 009c 04A9     		add	r1, sp, #16
+ 156 009e 3046     		mov	r0, r6
+ 157 00a0 FFF7FEFF 		bl	HAL_GPIO_Init
+ 158              	.LVL4:
+ 292:Core/Src/main.c **** 
+ 293:Core/Src/main.c ****   /*Configure GPIO pins : PB8 PB9 */
+ 294:Core/Src/main.c ****   GPIO_InitStruct.Pin = GPIO_PIN_8|GPIO_PIN_9;
+ 159              		.loc 1 294 3 view .LVU46
+ 160              		.loc 1 294 23 is_stmt 0 view .LVU47
+ 161 00a4 4FF44073 		mov	r3, #768
+ 162 00a8 0493     		str	r3, [sp, #16]
+ 295:Core/Src/main.c ****   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_OD;
+ARM GAS  C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s 			page 9
+
+
+ 163              		.loc 1 295 3 is_stmt 1 view .LVU48
+ 164              		.loc 1 295 24 is_stmt 0 view .LVU49
+ 165 00aa 1123     		movs	r3, #17
+ 166 00ac 0593     		str	r3, [sp, #20]
+ 296:Core/Src/main.c ****   GPIO_InitStruct.Pull = GPIO_PULLUP;
+ 167              		.loc 1 296 3 is_stmt 1 view .LVU50
+ 168              		.loc 1 296 24 is_stmt 0 view .LVU51
+ 169 00ae 0697     		str	r7, [sp, #24]
+ 297:Core/Src/main.c ****   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+ 170              		.loc 1 297 3 is_stmt 1 view .LVU52
+ 171              		.loc 1 297 25 is_stmt 0 view .LVU53
+ 172 00b0 0323     		movs	r3, #3
+ 173 00b2 0793     		str	r3, [sp, #28]
+ 298:Core/Src/main.c ****   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+ 174              		.loc 1 298 3 is_stmt 1 view .LVU54
+ 175 00b4 04A9     		add	r1, sp, #16
+ 176 00b6 2846     		mov	r0, r5
+ 177 00b8 FFF7FEFF 		bl	HAL_GPIO_Init
+ 178              	.LVL5:
+ 299:Core/Src/main.c **** 
+ 300:Core/Src/main.c ****   /* EXTI interrupt init*/
+ 301:Core/Src/main.c ****   HAL_NVIC_SetPriority(EXTI1_IRQn, 0, 0);
+ 179              		.loc 1 301 3 view .LVU55
+ 180 00bc 2246     		mov	r2, r4
+ 181 00be 2146     		mov	r1, r4
+ 182 00c0 0720     		movs	r0, #7
+ 183 00c2 FFF7FEFF 		bl	HAL_NVIC_SetPriority
+ 184              	.LVL6:
+ 302:Core/Src/main.c ****   HAL_NVIC_EnableIRQ(EXTI1_IRQn);
+ 185              		.loc 1 302 3 view .LVU56
+ 186 00c6 0720     		movs	r0, #7
+ 187 00c8 FFF7FEFF 		bl	HAL_NVIC_EnableIRQ
+ 188              	.LVL7:
+ 303:Core/Src/main.c **** 
+ 304:Core/Src/main.c **** }
+ 189              		.loc 1 304 1 is_stmt 0 view .LVU57
+ 190 00cc 08B0     		add	sp, sp, #32
+ 191              	.LCFI2:
+ 192              		.cfi_def_cfa_offset 24
+ 193              		@ sp needed
+ 194 00ce BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
+ 195              	.L4:
+ 196 00d2 00BF     		.align	2
+ 197              	.L3:
+ 198 00d4 00100240 		.word	1073876992
+ 199 00d8 00080140 		.word	1073809408
+ 200 00dc 000C0140 		.word	1073810432
+ 201 00e0 00003110 		.word	271646720
+ 202              		.cfi_endproc
+ 203              	.LFE69:
+ 205              		.section	.text.HAL_GPIO_EXTI_Callback,"ax",%progbits
+ 206              		.align	1
+ 207              		.global	HAL_GPIO_EXTI_Callback
+ 208              		.syntax unified
+ 209              		.thumb
+ 210              		.thumb_func
+ 212              	HAL_GPIO_EXTI_Callback:
+ARM GAS  C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s 			page 10
+
+
+ 213              	.LVL8:
+ 214              	.LFB70:
+ 305:Core/Src/main.c **** 
+ 306:Core/Src/main.c **** /* USER CODE BEGIN 4 */
+ 307:Core/Src/main.c **** void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+ 308:Core/Src/main.c **** {
+ 215              		.loc 1 308 1 is_stmt 1 view -0
+ 216              		.cfi_startproc
+ 217              		@ args = 0, pretend = 0, frame = 0
+ 218              		@ frame_needed = 0, uses_anonymous_args = 0
+ 219              		.loc 1 308 1 is_stmt 0 view .LVU59
+ 220 0000 10B5     		push	{r4, lr}
+ 221              	.LCFI3:
+ 222              		.cfi_def_cfa_offset 8
+ 223              		.cfi_offset 4, -8
+ 224              		.cfi_offset 14, -4
+ 225 0002 0446     		mov	r4, r0
+ 309:Core/Src/main.c ****   currentMillis = HAL_GetTick();
+ 226              		.loc 1 309 3 is_stmt 1 view .LVU60
+ 227              		.loc 1 309 19 is_stmt 0 view .LVU61
+ 228 0004 FFF7FEFF 		bl	HAL_GetTick
+ 229              	.LVL9:
+ 230              		.loc 1 309 17 view .LVU62
+ 231 0008 0D4B     		ldr	r3, .L9
+ 232 000a 1860     		str	r0, [r3]
+ 310:Core/Src/main.c ****   if (GPIO_Pin == GPIO_PIN_1 && (currentMillis - previousMillis > 25))
+ 233              		.loc 1 310 3 is_stmt 1 view .LVU63
+ 234              		.loc 1 310 6 is_stmt 0 view .LVU64
+ 235 000c 022C     		cmp	r4, #2
+ 236 000e 00D0     		beq	.L8
+ 237              	.L5:
+ 311:Core/Src/main.c ****   {
+ 312:Core/Src/main.c ****     HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_1);
+ 313:Core/Src/main.c ****     Saved = Distance;
+ 314:Core/Src/main.c ****     Flag ^= 1;
+ 315:Core/Src/main.c ****     previousMillis = currentMillis;
+ 316:Core/Src/main.c ****   }
+ 317:Core/Src/main.c **** }
+ 238              		.loc 1 317 1 view .LVU65
+ 239 0010 10BD     		pop	{r4, pc}
+ 240              	.L8:
+ 310:Core/Src/main.c ****   if (GPIO_Pin == GPIO_PIN_1 && (currentMillis - previousMillis > 25))
+ 241              		.loc 1 310 48 discriminator 1 view .LVU66
+ 242 0012 0C4B     		ldr	r3, .L9+4
+ 243 0014 1B68     		ldr	r3, [r3]
+ 244 0016 C01A     		subs	r0, r0, r3
+ 310:Core/Src/main.c ****   if (GPIO_Pin == GPIO_PIN_1 && (currentMillis - previousMillis > 25))
+ 245              		.loc 1 310 30 discriminator 1 view .LVU67
+ 246 0018 1928     		cmp	r0, #25
+ 247 001a F9D9     		bls	.L5
+ 312:Core/Src/main.c ****     Saved = Distance;
+ 248              		.loc 1 312 5 is_stmt 1 view .LVU68
+ 249 001c 0221     		movs	r1, #2
+ 250 001e 0A48     		ldr	r0, .L9+8
+ 251 0020 FFF7FEFF 		bl	HAL_GPIO_TogglePin
+ 252              	.LVL10:
+ 313:Core/Src/main.c ****     Flag ^= 1;
+ARM GAS  C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s 			page 11
+
+
+ 253              		.loc 1 313 5 view .LVU69
+ 313:Core/Src/main.c ****     Flag ^= 1;
+ 254              		.loc 1 313 11 is_stmt 0 view .LVU70
+ 255 0024 094B     		ldr	r3, .L9+12
+ 256 0026 1A88     		ldrh	r2, [r3]
+ 257 0028 094B     		ldr	r3, .L9+16
+ 258 002a 1A80     		strh	r2, [r3]	@ movhi
+ 314:Core/Src/main.c ****     previousMillis = currentMillis;
+ 259              		.loc 1 314 5 is_stmt 1 view .LVU71
+ 314:Core/Src/main.c ****     previousMillis = currentMillis;
+ 260              		.loc 1 314 10 is_stmt 0 view .LVU72
+ 261 002c 094A     		ldr	r2, .L9+20
+ 262 002e 1378     		ldrb	r3, [r2]	@ zero_extendqisi2
+ 263 0030 83F00103 		eor	r3, r3, #1
+ 264 0034 1370     		strb	r3, [r2]
+ 315:Core/Src/main.c ****   }
+ 265              		.loc 1 315 5 is_stmt 1 view .LVU73
+ 315:Core/Src/main.c ****   }
+ 266              		.loc 1 315 20 is_stmt 0 view .LVU74
+ 267 0036 024B     		ldr	r3, .L9
+ 268 0038 1A68     		ldr	r2, [r3]
+ 269 003a 024B     		ldr	r3, .L9+4
+ 270 003c 1A60     		str	r2, [r3]
+ 271              		.loc 1 317 1 view .LVU75
+ 272 003e E7E7     		b	.L5
+ 273              	.L10:
+ 274              		.align	2
+ 275              	.L9:
+ 276 0040 00000000 		.word	currentMillis
+ 277 0044 00000000 		.word	previousMillis
+ 278 0048 00080140 		.word	1073809408
+ 279 004c 00000000 		.word	Distance
+ 280 0050 00000000 		.word	Saved
+ 281 0054 00000000 		.word	Flag
+ 282              		.cfi_endproc
+ 283              	.LFE70:
+ 285              		.section	.text._tm1637DelayUsec,"ax",%progbits
+ 286              		.align	1
+ 287              		.global	_tm1637DelayUsec
+ 288              		.syntax unified
+ 289              		.thumb
+ 290              		.thumb_func
+ 292              	_tm1637DelayUsec:
+ 293              	.LVL11:
+ 294              	.LFB78:
+ 318:Core/Src/main.c **** 
+ 319:Core/Src/main.c **** void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+ 320:Core/Src/main.c **** {
+ 321:Core/Src/main.c ****     if(htim -> Instance == TIM2)
+ 322:Core/Src/main.c ****     {
+ 323:Core/Src/main.c ****         HAL_GPIO_WritePin(TRIG_PORT, TRIG_PIN, GPIO_PIN_SET);
+ 324:Core/Src/main.c ****         __HAL_TIM_SET_COUNTER(&htim1, 0);
+ 325:Core/Src/main.c ****         while (__HAL_TIM_GET_COUNTER(&htim1) < 10);
+ 326:Core/Src/main.c ****         HAL_GPIO_WritePin(TRIG_PORT, TRIG_PIN, GPIO_PIN_RESET);
+ 327:Core/Src/main.c ****         pMillis = HAL_GetTick();
+ 328:Core/Src/main.c ****         while (!(HAL_GPIO_ReadPin (ECHO_PORT, ECHO_PIN)) && pMillis + 10 > HAL_GetTick());
+ 329:Core/Src/main.c ****         Value1 = __HAL_TIM_GET_COUNTER (&htim1);
+ARM GAS  C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s 			page 12
+
+
+ 330:Core/Src/main.c ****         pMillis = HAL_GetTick();
+ 331:Core/Src/main.c ****         while ((HAL_GPIO_ReadPin (ECHO_PORT, ECHO_PIN)) && pMillis + 50 > HAL_GetTick());
+ 332:Core/Src/main.c ****         Value2 = __HAL_TIM_GET_COUNTER (&htim1);
+ 333:Core/Src/main.c **** 
+ 334:Core/Src/main.c ****         Temp = (Value2 - Value1) / 59; // * 0.034 / 2
+ 335:Core/Src/main.c ****         if(Temp < 0 || Temp > 400) return;
+ 336:Core/Src/main.c ****         Distance = Temp;
+ 337:Core/Src/main.c **** 
+ 338:Core/Src/main.c ****         if(Flag) {
+ 339:Core/Src/main.c ****             tm1637DisplayDecimal(Distance - Saved);
+ 340:Core/Src/main.c ****         } else {
+ 341:Core/Src/main.c ****             tm1637DisplayDecimal(Distance);
+ 342:Core/Src/main.c ****         }  
+ 343:Core/Src/main.c ****     }
+ 344:Core/Src/main.c **** }
+ 345:Core/Src/main.c **** 
+ 346:Core/Src/main.c **** //lib for tm1637 display
+ 347:Core/Src/main.c **** 
+ 348:Core/Src/main.c **** const char segmentMap[] = {
+ 349:Core/Src/main.c ****     0x3f, 0x06, 0x5b, 0x4f, 0x66, 0x6d, 0x7d, 0x07, 0x7f, 0x6f, // 0-9
+ 350:Core/Src/main.c ****     0x00, 0x40 // clear, -
+ 351:Core/Src/main.c **** };
+ 352:Core/Src/main.c **** 
+ 353:Core/Src/main.c **** void tm1637DisplayDecimal(int n)
+ 354:Core/Src/main.c **** {
+ 355:Core/Src/main.c ****     //if(n > 9999 || n < -999) return;
+ 356:Core/Src/main.c ****     int otr = 0;
+ 357:Core/Src/main.c ****     if (n < 0) {
+ 358:Core/Src/main.c ****         n *= -1;
+ 359:Core/Src/main.c ****         otr = 1;
+ 360:Core/Src/main.c ****     }
+ 361:Core/Src/main.c **** 
+ 362:Core/Src/main.c ****     unsigned char digitArr[4];
+ 363:Core/Src/main.c ****     digitArr[0] = segmentMap[n % 10];
+ 364:Core/Src/main.c ****     n /= 10;
+ 365:Core/Src/main.c ****     for (int i = 1; i < 4; ++i) {
+ 366:Core/Src/main.c ****         if (n % 10) {
+ 367:Core/Src/main.c ****         digitArr[i] = segmentMap[n % 10];
+ 368:Core/Src/main.c ****         } else {
+ 369:Core/Src/main.c ****             digitArr[i] = segmentMap[10];
+ 370:Core/Src/main.c ****         }
+ 371:Core/Src/main.c ****         n /= 10;
+ 372:Core/Src/main.c ****     }
+ 373:Core/Src/main.c ****     if (otr) {
+ 374:Core/Src/main.c ****         digitArr[3] = segmentMap[11];
+ 375:Core/Src/main.c ****     }
+ 376:Core/Src/main.c **** 
+ 377:Core/Src/main.c ****     _tm1637Start();
+ 378:Core/Src/main.c ****     _tm1637WriteByte(0x40);
+ 379:Core/Src/main.c ****     _tm1637ReadResult();
+ 380:Core/Src/main.c ****     _tm1637Stop();
+ 381:Core/Src/main.c **** 
+ 382:Core/Src/main.c ****     _tm1637Start();
+ 383:Core/Src/main.c ****     _tm1637WriteByte(0xc0);
+ 384:Core/Src/main.c ****     _tm1637ReadResult();
+ 385:Core/Src/main.c **** 
+ 386:Core/Src/main.c ****     for (int i = 0; i < 4; ++i) {
+ARM GAS  C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s 			page 13
+
+
+ 387:Core/Src/main.c ****         _tm1637WriteByte(digitArr[3 - i]);
+ 388:Core/Src/main.c ****         _tm1637ReadResult();
+ 389:Core/Src/main.c ****     }
+ 390:Core/Src/main.c **** 
+ 391:Core/Src/main.c ****     _tm1637Stop();
+ 392:Core/Src/main.c **** }
+ 393:Core/Src/main.c **** 
+ 394:Core/Src/main.c **** void tm1637SetBrightness(char brightness)
+ 395:Core/Src/main.c **** {
+ 396:Core/Src/main.c ****     _tm1637Start();
+ 397:Core/Src/main.c ****     _tm1637WriteByte(0x87 + brightness);
+ 398:Core/Src/main.c ****     _tm1637ReadResult();
+ 399:Core/Src/main.c ****     _tm1637Stop();
+ 400:Core/Src/main.c **** }
+ 401:Core/Src/main.c **** 
+ 402:Core/Src/main.c **** void _tm1637Start(void)
+ 403:Core/Src/main.c **** {
+ 404:Core/Src/main.c ****     _tm1637ClkHigh();
+ 405:Core/Src/main.c ****     _tm1637DioHigh();
+ 406:Core/Src/main.c ****     _tm1637DelayUsec(20);
+ 407:Core/Src/main.c ****     _tm1637DioLow();
+ 408:Core/Src/main.c **** }
+ 409:Core/Src/main.c **** 
+ 410:Core/Src/main.c **** void _tm1637Stop(void)
+ 411:Core/Src/main.c **** {
+ 412:Core/Src/main.c ****     _tm1637ClkLow();
+ 413:Core/Src/main.c ****     _tm1637DelayUsec(20);
+ 414:Core/Src/main.c ****     _tm1637DioLow();
+ 415:Core/Src/main.c ****     _tm1637DelayUsec(20);
+ 416:Core/Src/main.c ****     _tm1637ClkHigh();
+ 417:Core/Src/main.c ****     _tm1637DelayUsec(20);
+ 418:Core/Src/main.c ****     _tm1637DioHigh();
+ 419:Core/Src/main.c **** }
+ 420:Core/Src/main.c **** 
+ 421:Core/Src/main.c **** void _tm1637ReadResult(void)
+ 422:Core/Src/main.c **** {
+ 423:Core/Src/main.c ****     _tm1637ClkLow();
+ 424:Core/Src/main.c ****     _tm1637DelayUsec(50);
+ 425:Core/Src/main.c ****     _tm1637ClkHigh();
+ 426:Core/Src/main.c ****     _tm1637DelayUsec(20);
+ 427:Core/Src/main.c ****     _tm1637ClkLow();
+ 428:Core/Src/main.c **** }
+ 429:Core/Src/main.c **** 
+ 430:Core/Src/main.c **** void _tm1637WriteByte(unsigned char b)
+ 431:Core/Src/main.c **** {
+ 432:Core/Src/main.c ****     for (int i = 0; i < 8; ++i) {
+ 433:Core/Src/main.c ****         _tm1637ClkLow();
+ 434:Core/Src/main.c ****         if (b & 0x01) {
+ 435:Core/Src/main.c ****             _tm1637DioHigh();
+ 436:Core/Src/main.c ****         } else {
+ 437:Core/Src/main.c ****             _tm1637DioLow();
+ 438:Core/Src/main.c ****         }
+ 439:Core/Src/main.c ****         _tm1637DelayUsec(30);
+ 440:Core/Src/main.c ****         b >>= 1;
+ 441:Core/Src/main.c ****         _tm1637ClkHigh();
+ 442:Core/Src/main.c ****         _tm1637DelayUsec(30);
+ 443:Core/Src/main.c ****     }
+ARM GAS  C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s 			page 14
+
+
+ 444:Core/Src/main.c **** }
+ 445:Core/Src/main.c **** 
+ 446:Core/Src/main.c **** void _tm1637DelayUsec(unsigned int i)
+ 447:Core/Src/main.c **** {
+ 295              		.loc 1 447 1 is_stmt 1 view -0
+ 296              		.cfi_startproc
+ 297              		@ args = 0, pretend = 0, frame = 0
+ 298              		@ frame_needed = 0, uses_anonymous_args = 0
+ 299              		@ link register save eliminated.
+ 448:Core/Src/main.c ****     __HAL_TIM_SET_COUNTER(&htim1, 0);
+ 300              		.loc 1 448 5 view .LVU77
+ 301 0000 034B     		ldr	r3, .L13
+ 302 0002 1A68     		ldr	r2, [r3]
+ 303 0004 0023     		movs	r3, #0
+ 304 0006 5362     		str	r3, [r2, #36]
+ 449:Core/Src/main.c ****     while(__HAL_TIM_GET_COUNTER(&htim1) < i);
+ 305              		.loc 1 449 5 view .LVU78
+ 306              	.L12:
+ 307              		.loc 1 449 41 discriminator 1 view .LVU79
+ 308              		.loc 1 449 11 is_stmt 0 discriminator 1 view .LVU80
+ 309 0008 536A     		ldr	r3, [r2, #36]
+ 310              		.loc 1 449 41 discriminator 1 view .LVU81
+ 311 000a 8342     		cmp	r3, r0
+ 312 000c FCD3     		bcc	.L12
+ 450:Core/Src/main.c **** }
+ 313              		.loc 1 450 1 view .LVU82
+ 314 000e 7047     		bx	lr
+ 315              	.L14:
+ 316              		.align	2
+ 317              	.L13:
+ 318 0010 00000000 		.word	htim1
+ 319              		.cfi_endproc
+ 320              	.LFE78:
+ 322              		.section	.text._tm1637ClkHigh,"ax",%progbits
+ 323              		.align	1
+ 324              		.global	_tm1637ClkHigh
+ 325              		.syntax unified
+ 326              		.thumb
+ 327              		.thumb_func
+ 329              	_tm1637ClkHigh:
+ 330              	.LFB79:
+ 451:Core/Src/main.c **** 
+ 452:Core/Src/main.c **** void _tm1637ClkHigh(void)
+ 453:Core/Src/main.c **** {
+ 331              		.loc 1 453 1 is_stmt 1 view -0
+ 332              		.cfi_startproc
+ 333              		@ args = 0, pretend = 0, frame = 0
+ 334              		@ frame_needed = 0, uses_anonymous_args = 0
+ 335 0000 08B5     		push	{r3, lr}
+ 336              	.LCFI4:
+ 337              		.cfi_def_cfa_offset 8
+ 338              		.cfi_offset 3, -8
+ 339              		.cfi_offset 14, -4
+ 454:Core/Src/main.c ****     HAL_GPIO_WritePin(CLK_PORT, CLK_PIN, GPIO_PIN_SET);
+ 340              		.loc 1 454 5 view .LVU84
+ 341 0002 0122     		movs	r2, #1
+ 342 0004 4FF40071 		mov	r1, #512
+ARM GAS  C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s 			page 15
+
+
+ 343 0008 0148     		ldr	r0, .L17
+ 344 000a FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 345              	.LVL12:
+ 455:Core/Src/main.c **** }
+ 346              		.loc 1 455 1 is_stmt 0 view .LVU85
+ 347 000e 08BD     		pop	{r3, pc}
+ 348              	.L18:
+ 349              		.align	2
+ 350              	.L17:
+ 351 0010 000C0140 		.word	1073810432
+ 352              		.cfi_endproc
+ 353              	.LFE79:
+ 355              		.section	.text._tm1637ClkLow,"ax",%progbits
+ 356              		.align	1
+ 357              		.global	_tm1637ClkLow
+ 358              		.syntax unified
+ 359              		.thumb
+ 360              		.thumb_func
+ 362              	_tm1637ClkLow:
+ 363              	.LFB80:
+ 456:Core/Src/main.c **** 
+ 457:Core/Src/main.c **** void _tm1637ClkLow(void)
+ 458:Core/Src/main.c **** {
+ 364              		.loc 1 458 1 is_stmt 1 view -0
+ 365              		.cfi_startproc
+ 366              		@ args = 0, pretend = 0, frame = 0
+ 367              		@ frame_needed = 0, uses_anonymous_args = 0
+ 368 0000 08B5     		push	{r3, lr}
+ 369              	.LCFI5:
+ 370              		.cfi_def_cfa_offset 8
+ 371              		.cfi_offset 3, -8
+ 372              		.cfi_offset 14, -4
+ 459:Core/Src/main.c ****     HAL_GPIO_WritePin(CLK_PORT, CLK_PIN, GPIO_PIN_RESET);
+ 373              		.loc 1 459 5 view .LVU87
+ 374 0002 0022     		movs	r2, #0
+ 375 0004 4FF40071 		mov	r1, #512
+ 376 0008 0148     		ldr	r0, .L21
+ 377 000a FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 378              	.LVL13:
+ 460:Core/Src/main.c **** }
+ 379              		.loc 1 460 1 is_stmt 0 view .LVU88
+ 380 000e 08BD     		pop	{r3, pc}
+ 381              	.L22:
+ 382              		.align	2
+ 383              	.L21:
+ 384 0010 000C0140 		.word	1073810432
+ 385              		.cfi_endproc
+ 386              	.LFE80:
+ 388              		.section	.text._tm1637ReadResult,"ax",%progbits
+ 389              		.align	1
+ 390              		.global	_tm1637ReadResult
+ 391              		.syntax unified
+ 392              		.thumb
+ 393              		.thumb_func
+ 395              	_tm1637ReadResult:
+ 396              	.LFB76:
+ 422:Core/Src/main.c ****     _tm1637ClkLow();
+ARM GAS  C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s 			page 16
+
+
+ 397              		.loc 1 422 1 is_stmt 1 view -0
+ 398              		.cfi_startproc
+ 399              		@ args = 0, pretend = 0, frame = 0
+ 400              		@ frame_needed = 0, uses_anonymous_args = 0
+ 401 0000 08B5     		push	{r3, lr}
+ 402              	.LCFI6:
+ 403              		.cfi_def_cfa_offset 8
+ 404              		.cfi_offset 3, -8
+ 405              		.cfi_offset 14, -4
+ 423:Core/Src/main.c ****     _tm1637DelayUsec(50);
+ 406              		.loc 1 423 5 view .LVU90
+ 407 0002 FFF7FEFF 		bl	_tm1637ClkLow
+ 408              	.LVL14:
+ 424:Core/Src/main.c ****     _tm1637ClkHigh();
+ 409              		.loc 1 424 5 view .LVU91
+ 410 0006 3220     		movs	r0, #50
+ 411 0008 FFF7FEFF 		bl	_tm1637DelayUsec
+ 412              	.LVL15:
+ 425:Core/Src/main.c ****     _tm1637DelayUsec(20);
+ 413              		.loc 1 425 5 view .LVU92
+ 414 000c FFF7FEFF 		bl	_tm1637ClkHigh
+ 415              	.LVL16:
+ 426:Core/Src/main.c ****     _tm1637ClkLow();
+ 416              		.loc 1 426 5 view .LVU93
+ 417 0010 1420     		movs	r0, #20
+ 418 0012 FFF7FEFF 		bl	_tm1637DelayUsec
+ 419              	.LVL17:
+ 427:Core/Src/main.c **** }
+ 420              		.loc 1 427 5 view .LVU94
+ 421 0016 FFF7FEFF 		bl	_tm1637ClkLow
+ 422              	.LVL18:
+ 428:Core/Src/main.c **** 
+ 423              		.loc 1 428 1 is_stmt 0 view .LVU95
+ 424 001a 08BD     		pop	{r3, pc}
+ 425              		.cfi_endproc
+ 426              	.LFE76:
+ 428              		.section	.text._tm1637DioHigh,"ax",%progbits
+ 429              		.align	1
+ 430              		.global	_tm1637DioHigh
+ 431              		.syntax unified
+ 432              		.thumb
+ 433              		.thumb_func
+ 435              	_tm1637DioHigh:
+ 436              	.LFB81:
+ 461:Core/Src/main.c **** 
+ 462:Core/Src/main.c **** void _tm1637DioHigh(void)
+ 463:Core/Src/main.c **** {
+ 437              		.loc 1 463 1 is_stmt 1 view -0
+ 438              		.cfi_startproc
+ 439              		@ args = 0, pretend = 0, frame = 0
+ 440              		@ frame_needed = 0, uses_anonymous_args = 0
+ 441 0000 08B5     		push	{r3, lr}
+ 442              	.LCFI7:
+ 443              		.cfi_def_cfa_offset 8
+ 444              		.cfi_offset 3, -8
+ 445              		.cfi_offset 14, -4
+ 464:Core/Src/main.c ****     HAL_GPIO_WritePin(DIO_PORT, DIO_PIN, GPIO_PIN_SET);
+ARM GAS  C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s 			page 17
+
+
+ 446              		.loc 1 464 5 view .LVU97
+ 447 0002 0122     		movs	r2, #1
+ 448 0004 4FF48071 		mov	r1, #256
+ 449 0008 0148     		ldr	r0, .L27
+ 450 000a FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 451              	.LVL19:
+ 465:Core/Src/main.c **** }
+ 452              		.loc 1 465 1 is_stmt 0 view .LVU98
+ 453 000e 08BD     		pop	{r3, pc}
+ 454              	.L28:
+ 455              		.align	2
+ 456              	.L27:
+ 457 0010 000C0140 		.word	1073810432
+ 458              		.cfi_endproc
+ 459              	.LFE81:
+ 461              		.section	.text._tm1637DioLow,"ax",%progbits
+ 462              		.align	1
+ 463              		.global	_tm1637DioLow
+ 464              		.syntax unified
+ 465              		.thumb
+ 466              		.thumb_func
+ 468              	_tm1637DioLow:
+ 469              	.LFB82:
+ 466:Core/Src/main.c **** 
+ 467:Core/Src/main.c **** void _tm1637DioLow(void)
+ 468:Core/Src/main.c **** {
+ 470              		.loc 1 468 1 is_stmt 1 view -0
+ 471              		.cfi_startproc
+ 472              		@ args = 0, pretend = 0, frame = 0
+ 473              		@ frame_needed = 0, uses_anonymous_args = 0
+ 474 0000 08B5     		push	{r3, lr}
+ 475              	.LCFI8:
+ 476              		.cfi_def_cfa_offset 8
+ 477              		.cfi_offset 3, -8
+ 478              		.cfi_offset 14, -4
+ 469:Core/Src/main.c ****     HAL_GPIO_WritePin(DIO_PORT, DIO_PIN, GPIO_PIN_RESET);
+ 479              		.loc 1 469 5 view .LVU100
+ 480 0002 0022     		movs	r2, #0
+ 481 0004 4FF48071 		mov	r1, #256
+ 482 0008 0148     		ldr	r0, .L31
+ 483 000a FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 484              	.LVL20:
+ 470:Core/Src/main.c **** }
+ 485              		.loc 1 470 1 is_stmt 0 view .LVU101
+ 486 000e 08BD     		pop	{r3, pc}
+ 487              	.L32:
+ 488              		.align	2
+ 489              	.L31:
+ 490 0010 000C0140 		.word	1073810432
+ 491              		.cfi_endproc
+ 492              	.LFE82:
+ 494              		.section	.text._tm1637Start,"ax",%progbits
+ 495              		.align	1
+ 496              		.global	_tm1637Start
+ 497              		.syntax unified
+ 498              		.thumb
+ 499              		.thumb_func
+ARM GAS  C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s 			page 18
+
+
+ 501              	_tm1637Start:
+ 502              	.LFB74:
+ 403:Core/Src/main.c ****     _tm1637ClkHigh();
+ 503              		.loc 1 403 1 is_stmt 1 view -0
+ 504              		.cfi_startproc
+ 505              		@ args = 0, pretend = 0, frame = 0
+ 506              		@ frame_needed = 0, uses_anonymous_args = 0
+ 507 0000 08B5     		push	{r3, lr}
+ 508              	.LCFI9:
+ 509              		.cfi_def_cfa_offset 8
+ 510              		.cfi_offset 3, -8
+ 511              		.cfi_offset 14, -4
+ 404:Core/Src/main.c ****     _tm1637DioHigh();
+ 512              		.loc 1 404 5 view .LVU103
+ 513 0002 FFF7FEFF 		bl	_tm1637ClkHigh
+ 514              	.LVL21:
+ 405:Core/Src/main.c ****     _tm1637DelayUsec(20);
+ 515              		.loc 1 405 5 view .LVU104
+ 516 0006 FFF7FEFF 		bl	_tm1637DioHigh
+ 517              	.LVL22:
+ 406:Core/Src/main.c ****     _tm1637DioLow();
+ 518              		.loc 1 406 5 view .LVU105
+ 519 000a 1420     		movs	r0, #20
+ 520 000c FFF7FEFF 		bl	_tm1637DelayUsec
+ 521              	.LVL23:
+ 407:Core/Src/main.c **** }
+ 522              		.loc 1 407 5 view .LVU106
+ 523 0010 FFF7FEFF 		bl	_tm1637DioLow
+ 524              	.LVL24:
+ 408:Core/Src/main.c **** 
+ 525              		.loc 1 408 1 is_stmt 0 view .LVU107
+ 526 0014 08BD     		pop	{r3, pc}
+ 527              		.cfi_endproc
+ 528              	.LFE74:
+ 530              		.section	.text._tm1637Stop,"ax",%progbits
+ 531              		.align	1
+ 532              		.global	_tm1637Stop
+ 533              		.syntax unified
+ 534              		.thumb
+ 535              		.thumb_func
+ 537              	_tm1637Stop:
+ 538              	.LFB75:
+ 411:Core/Src/main.c ****     _tm1637ClkLow();
+ 539              		.loc 1 411 1 is_stmt 1 view -0
+ 540              		.cfi_startproc
+ 541              		@ args = 0, pretend = 0, frame = 0
+ 542              		@ frame_needed = 0, uses_anonymous_args = 0
+ 543 0000 08B5     		push	{r3, lr}
+ 544              	.LCFI10:
+ 545              		.cfi_def_cfa_offset 8
+ 546              		.cfi_offset 3, -8
+ 547              		.cfi_offset 14, -4
+ 412:Core/Src/main.c ****     _tm1637DelayUsec(20);
+ 548              		.loc 1 412 5 view .LVU109
+ 549 0002 FFF7FEFF 		bl	_tm1637ClkLow
+ 550              	.LVL25:
+ 413:Core/Src/main.c ****     _tm1637DioLow();
+ARM GAS  C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s 			page 19
+
+
+ 551              		.loc 1 413 5 view .LVU110
+ 552 0006 1420     		movs	r0, #20
+ 553 0008 FFF7FEFF 		bl	_tm1637DelayUsec
+ 554              	.LVL26:
+ 414:Core/Src/main.c ****     _tm1637DelayUsec(20);
+ 555              		.loc 1 414 5 view .LVU111
+ 556 000c FFF7FEFF 		bl	_tm1637DioLow
+ 557              	.LVL27:
+ 415:Core/Src/main.c ****     _tm1637ClkHigh();
+ 558              		.loc 1 415 5 view .LVU112
+ 559 0010 1420     		movs	r0, #20
+ 560 0012 FFF7FEFF 		bl	_tm1637DelayUsec
+ 561              	.LVL28:
+ 416:Core/Src/main.c ****     _tm1637DelayUsec(20);
+ 562              		.loc 1 416 5 view .LVU113
+ 563 0016 FFF7FEFF 		bl	_tm1637ClkHigh
+ 564              	.LVL29:
+ 417:Core/Src/main.c ****     _tm1637DioHigh();
+ 565              		.loc 1 417 5 view .LVU114
+ 566 001a 1420     		movs	r0, #20
+ 567 001c FFF7FEFF 		bl	_tm1637DelayUsec
+ 568              	.LVL30:
+ 418:Core/Src/main.c **** }
+ 569              		.loc 1 418 5 view .LVU115
+ 570 0020 FFF7FEFF 		bl	_tm1637DioHigh
+ 571              	.LVL31:
+ 419:Core/Src/main.c **** 
+ 572              		.loc 1 419 1 is_stmt 0 view .LVU116
+ 573 0024 08BD     		pop	{r3, pc}
+ 574              		.cfi_endproc
+ 575              	.LFE75:
+ 577              		.section	.text._tm1637WriteByte,"ax",%progbits
+ 578              		.align	1
+ 579              		.global	_tm1637WriteByte
+ 580              		.syntax unified
+ 581              		.thumb
+ 582              		.thumb_func
+ 584              	_tm1637WriteByte:
+ 585              	.LVL32:
+ 586              	.LFB77:
+ 431:Core/Src/main.c ****     for (int i = 0; i < 8; ++i) {
+ 587              		.loc 1 431 1 is_stmt 1 view -0
+ 588              		.cfi_startproc
+ 589              		@ args = 0, pretend = 0, frame = 0
+ 590              		@ frame_needed = 0, uses_anonymous_args = 0
+ 431:Core/Src/main.c ****     for (int i = 0; i < 8; ++i) {
+ 591              		.loc 1 431 1 is_stmt 0 view .LVU118
+ 592 0000 38B5     		push	{r3, r4, r5, lr}
+ 593              	.LCFI11:
+ 594              		.cfi_def_cfa_offset 16
+ 595              		.cfi_offset 3, -16
+ 596              		.cfi_offset 4, -12
+ 597              		.cfi_offset 5, -8
+ 598              		.cfi_offset 14, -4
+ 599 0002 0446     		mov	r4, r0
+ 432:Core/Src/main.c ****         _tm1637ClkLow();
+ 600              		.loc 1 432 5 is_stmt 1 view .LVU119
+ARM GAS  C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s 			page 20
+
+
+ 601              	.LBB7:
+ 432:Core/Src/main.c ****         _tm1637ClkLow();
+ 602              		.loc 1 432 10 view .LVU120
+ 603              	.LVL33:
+ 432:Core/Src/main.c ****         _tm1637ClkLow();
+ 604              		.loc 1 432 14 is_stmt 0 view .LVU121
+ 605 0004 0025     		movs	r5, #0
+ 432:Core/Src/main.c ****         _tm1637ClkLow();
+ 606              		.loc 1 432 5 view .LVU122
+ 607 0006 0BE0     		b	.L38
+ 608              	.LVL34:
+ 609              	.L39:
+ 437:Core/Src/main.c ****         }
+ 610              		.loc 1 437 13 is_stmt 1 view .LVU123
+ 611 0008 FFF7FEFF 		bl	_tm1637DioLow
+ 612              	.LVL35:
+ 613              	.L40:
+ 439:Core/Src/main.c ****         b >>= 1;
+ 614              		.loc 1 439 9 discriminator 2 view .LVU124
+ 615 000c 1E20     		movs	r0, #30
+ 616 000e FFF7FEFF 		bl	_tm1637DelayUsec
+ 617              	.LVL36:
+ 440:Core/Src/main.c ****         _tm1637ClkHigh();
+ 618              		.loc 1 440 9 discriminator 2 view .LVU125
+ 440:Core/Src/main.c ****         _tm1637ClkHigh();
+ 619              		.loc 1 440 11 is_stmt 0 discriminator 2 view .LVU126
+ 620 0012 6408     		lsrs	r4, r4, #1
+ 621              	.LVL37:
+ 441:Core/Src/main.c ****         _tm1637DelayUsec(30);
+ 622              		.loc 1 441 9 is_stmt 1 discriminator 2 view .LVU127
+ 623 0014 FFF7FEFF 		bl	_tm1637ClkHigh
+ 624              	.LVL38:
+ 442:Core/Src/main.c ****     }
+ 625              		.loc 1 442 9 discriminator 2 view .LVU128
+ 626 0018 1E20     		movs	r0, #30
+ 627 001a FFF7FEFF 		bl	_tm1637DelayUsec
+ 628              	.LVL39:
+ 432:Core/Src/main.c ****         _tm1637ClkLow();
+ 629              		.loc 1 432 28 discriminator 2 view .LVU129
+ 630 001e 0135     		adds	r5, r5, #1
+ 631              	.LVL40:
+ 632              	.L38:
+ 432:Core/Src/main.c ****         _tm1637ClkLow();
+ 633              		.loc 1 432 23 discriminator 1 view .LVU130
+ 634 0020 072D     		cmp	r5, #7
+ 635 0022 07DC     		bgt	.L43
+ 433:Core/Src/main.c ****         if (b & 0x01) {
+ 636              		.loc 1 433 9 view .LVU131
+ 637 0024 FFF7FEFF 		bl	_tm1637ClkLow
+ 638              	.LVL41:
+ 434:Core/Src/main.c ****             _tm1637DioHigh();
+ 639              		.loc 1 434 9 view .LVU132
+ 434:Core/Src/main.c ****             _tm1637DioHigh();
+ 640              		.loc 1 434 12 is_stmt 0 view .LVU133
+ 641 0028 14F0010F 		tst	r4, #1
+ 642 002c ECD0     		beq	.L39
+ 435:Core/Src/main.c ****         } else {
+ARM GAS  C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s 			page 21
+
+
+ 643              		.loc 1 435 13 is_stmt 1 view .LVU134
+ 644 002e FFF7FEFF 		bl	_tm1637DioHigh
+ 645              	.LVL42:
+ 646 0032 EBE7     		b	.L40
+ 647              	.L43:
+ 648              	.LBE7:
+ 444:Core/Src/main.c **** 
+ 649              		.loc 1 444 1 is_stmt 0 view .LVU135
+ 650 0034 38BD     		pop	{r3, r4, r5, pc}
+ 444:Core/Src/main.c **** 
+ 651              		.loc 1 444 1 view .LVU136
+ 652              		.cfi_endproc
+ 653              	.LFE77:
+ 655              		.section	.text.tm1637DisplayDecimal,"ax",%progbits
+ 656              		.align	1
+ 657              		.global	tm1637DisplayDecimal
+ 658              		.syntax unified
+ 659              		.thumb
+ 660              		.thumb_func
+ 662              	tm1637DisplayDecimal:
+ 663              	.LVL43:
+ 664              	.LFB72:
+ 354:Core/Src/main.c ****     //if(n > 9999 || n < -999) return;
+ 665              		.loc 1 354 1 is_stmt 1 view -0
+ 666              		.cfi_startproc
+ 667              		@ args = 0, pretend = 0, frame = 8
+ 668              		@ frame_needed = 0, uses_anonymous_args = 0
+ 354:Core/Src/main.c ****     //if(n > 9999 || n < -999) return;
+ 669              		.loc 1 354 1 is_stmt 0 view .LVU138
+ 670 0000 10B5     		push	{r4, lr}
+ 671              	.LCFI12:
+ 672              		.cfi_def_cfa_offset 8
+ 673              		.cfi_offset 4, -8
+ 674              		.cfi_offset 14, -4
+ 675 0002 82B0     		sub	sp, sp, #8
+ 676              	.LCFI13:
+ 677              		.cfi_def_cfa_offset 16
+ 356:Core/Src/main.c ****     if (n < 0) {
+ 678              		.loc 1 356 5 is_stmt 1 view .LVU139
+ 679              	.LVL44:
+ 357:Core/Src/main.c ****         n *= -1;
+ 680              		.loc 1 357 5 view .LVU140
+ 357:Core/Src/main.c ****         n *= -1;
+ 681              		.loc 1 357 8 is_stmt 0 view .LVU141
+ 682 0004 0028     		cmp	r0, #0
+ 357:Core/Src/main.c ****         n *= -1;
+ 683              		.loc 1 357 8 view .LVU142
+ 684 0006 11DB     		blt	.L55
+ 356:Core/Src/main.c ****     if (n < 0) {
+ 685              		.loc 1 356 9 view .LVU143
+ 686 0008 0024     		movs	r4, #0
+ 687              	.LVL45:
+ 688              	.L45:
+ 362:Core/Src/main.c ****     digitArr[0] = segmentMap[n % 10];
+ 689              		.loc 1 362 5 is_stmt 1 view .LVU144
+ 363:Core/Src/main.c ****     n /= 10;
+ 690              		.loc 1 363 5 view .LVU145
+ARM GAS  C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s 			page 22
+
+
+ 363:Core/Src/main.c ****     n /= 10;
+ 691              		.loc 1 363 32 is_stmt 0 view .LVU146
+ 692 000a 2E4B     		ldr	r3, .L57
+ 693 000c 83FB0023 		smull	r2, r3, r3, r0
+ 694 0010 C217     		asrs	r2, r0, #31
+ 695 0012 C2EBA302 		rsb	r2, r2, r3, asr #2
+ 696 0016 1346     		mov	r3, r2
+ 697 0018 02EB8202 		add	r2, r2, r2, lsl #2
+ 698 001c A0EB4202 		sub	r2, r0, r2, lsl #1
+ 363:Core/Src/main.c ****     n /= 10;
+ 699              		.loc 1 363 29 view .LVU147
+ 700 0020 2949     		ldr	r1, .L57+4
+ 701 0022 8A5C     		ldrb	r2, [r1, r2]	@ zero_extendqisi2
+ 363:Core/Src/main.c ****     n /= 10;
+ 702              		.loc 1 363 17 view .LVU148
+ 703 0024 8DF80420 		strb	r2, [sp, #4]
+ 364:Core/Src/main.c ****     for (int i = 1; i < 4; ++i) {
+ 704              		.loc 1 364 5 is_stmt 1 view .LVU149
+ 705              	.LVL46:
+ 365:Core/Src/main.c ****         if (n % 10) {
+ 706              		.loc 1 365 5 view .LVU150
+ 707              	.LBB8:
+ 365:Core/Src/main.c ****         if (n % 10) {
+ 708              		.loc 1 365 10 view .LVU151
+ 365:Core/Src/main.c ****         if (n % 10) {
+ 709              		.loc 1 365 14 is_stmt 0 view .LVU152
+ 710 0028 0120     		movs	r0, #1
+ 365:Core/Src/main.c ****         if (n % 10) {
+ 711              		.loc 1 365 5 view .LVU153
+ 712 002a 0FE0     		b	.L46
+ 713              	.LVL47:
+ 714              	.L55:
+ 365:Core/Src/main.c ****         if (n % 10) {
+ 715              		.loc 1 365 5 view .LVU154
+ 716              	.LBE8:
+ 358:Core/Src/main.c ****         otr = 1;
+ 717              		.loc 1 358 9 is_stmt 1 view .LVU155
+ 358:Core/Src/main.c ****         otr = 1;
+ 718              		.loc 1 358 11 is_stmt 0 view .LVU156
+ 719 002c 4042     		rsbs	r0, r0, #0
+ 720              	.LVL48:
+ 359:Core/Src/main.c ****     }
+ 721              		.loc 1 359 9 is_stmt 1 view .LVU157
+ 359:Core/Src/main.c ****     }
+ 722              		.loc 1 359 13 is_stmt 0 view .LVU158
+ 723 002e 0124     		movs	r4, #1
+ 724 0030 EBE7     		b	.L45
+ 725              	.LVL49:
+ 726              	.L47:
+ 727              	.LBB9:
+ 369:Core/Src/main.c ****         }
+ 728              		.loc 1 369 13 is_stmt 1 view .LVU159
+ 369:Core/Src/main.c ****         }
+ 729              		.loc 1 369 25 is_stmt 0 view .LVU160
+ 730 0032 0021     		movs	r1, #0
+ 731 0034 00F10802 		add	r2, r0, #8
+ 732 0038 6A44     		add	r2, sp, r2
+ARM GAS  C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s 			page 23
+
+
+ 733 003a 02F8041C 		strb	r1, [r2, #-4]
+ 734              	.L48:
+ 371:Core/Src/main.c ****     }
+ 735              		.loc 1 371 9 is_stmt 1 discriminator 2 view .LVU161
+ 371:Core/Src/main.c ****     }
+ 736              		.loc 1 371 11 is_stmt 0 discriminator 2 view .LVU162
+ 737 003e 214A     		ldr	r2, .L57
+ 738 0040 82FB0312 		smull	r1, r2, r2, r3
+ 739 0044 DB17     		asrs	r3, r3, #31
+ 740              	.LVL50:
+ 371:Core/Src/main.c ****     }
+ 741              		.loc 1 371 11 discriminator 2 view .LVU163
+ 742 0046 C3EBA203 		rsb	r3, r3, r2, asr #2
+ 743              	.LVL51:
+ 365:Core/Src/main.c ****         if (n % 10) {
+ 744              		.loc 1 365 28 is_stmt 1 discriminator 2 view .LVU164
+ 745 004a 0130     		adds	r0, r0, #1
+ 746              	.LVL52:
+ 747              	.L46:
+ 365:Core/Src/main.c ****         if (n % 10) {
+ 748              		.loc 1 365 23 discriminator 1 view .LVU165
+ 749 004c 0328     		cmp	r0, #3
+ 750 004e 12DC     		bgt	.L56
+ 366:Core/Src/main.c ****         digitArr[i] = segmentMap[n % 10];
+ 751              		.loc 1 366 9 view .LVU166
+ 366:Core/Src/main.c ****         digitArr[i] = segmentMap[n % 10];
+ 752              		.loc 1 366 15 is_stmt 0 view .LVU167
+ 753 0050 1C49     		ldr	r1, .L57
+ 754 0052 81FB0321 		smull	r2, r1, r1, r3
+ 755 0056 DA17     		asrs	r2, r3, #31
+ 756 0058 C2EBA102 		rsb	r2, r2, r1, asr #2
+ 757 005c 02EB8202 		add	r2, r2, r2, lsl #2
+ 366:Core/Src/main.c ****         digitArr[i] = segmentMap[n % 10];
+ 758              		.loc 1 366 12 view .LVU168
+ 759 0060 B3EB4202 		subs	r2, r3, r2, lsl #1
+ 760 0064 E5D0     		beq	.L47
+ 367:Core/Src/main.c ****         } else {
+ 761              		.loc 1 367 9 is_stmt 1 view .LVU169
+ 367:Core/Src/main.c ****         } else {
+ 762              		.loc 1 367 33 is_stmt 0 view .LVU170
+ 763 0066 1849     		ldr	r1, .L57+4
+ 764 0068 895C     		ldrb	r1, [r1, r2]	@ zero_extendqisi2
+ 367:Core/Src/main.c ****         } else {
+ 765              		.loc 1 367 21 view .LVU171
+ 766 006a 00F10802 		add	r2, r0, #8
+ 767 006e 6A44     		add	r2, sp, r2
+ 768 0070 02F8041C 		strb	r1, [r2, #-4]
+ 769 0074 E3E7     		b	.L48
+ 770              	.L56:
+ 771              	.LBE9:
+ 373:Core/Src/main.c ****         digitArr[3] = segmentMap[11];
+ 772              		.loc 1 373 5 is_stmt 1 view .LVU172
+ 373:Core/Src/main.c ****         digitArr[3] = segmentMap[11];
+ 773              		.loc 1 373 8 is_stmt 0 view .LVU173
+ 774 0076 14B1     		cbz	r4, .L50
+ 374:Core/Src/main.c ****     }
+ 775              		.loc 1 374 9 is_stmt 1 view .LVU174
+ARM GAS  C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s 			page 24
+
+
+ 374:Core/Src/main.c ****     }
+ 776              		.loc 1 374 21 is_stmt 0 view .LVU175
+ 777 0078 4023     		movs	r3, #64
+ 778              	.LVL53:
+ 374:Core/Src/main.c ****     }
+ 779              		.loc 1 374 21 view .LVU176
+ 780 007a 8DF80730 		strb	r3, [sp, #7]
+ 781              	.L50:
+ 377:Core/Src/main.c ****     _tm1637WriteByte(0x40);
+ 782              		.loc 1 377 5 is_stmt 1 view .LVU177
+ 783 007e FFF7FEFF 		bl	_tm1637Start
+ 784              	.LVL54:
+ 378:Core/Src/main.c ****     _tm1637ReadResult();
+ 785              		.loc 1 378 5 view .LVU178
+ 786 0082 4020     		movs	r0, #64
+ 787 0084 FFF7FEFF 		bl	_tm1637WriteByte
+ 788              	.LVL55:
+ 379:Core/Src/main.c ****     _tm1637Stop();
+ 789              		.loc 1 379 5 view .LVU179
+ 790 0088 FFF7FEFF 		bl	_tm1637ReadResult
+ 791              	.LVL56:
+ 380:Core/Src/main.c **** 
+ 792              		.loc 1 380 5 view .LVU180
+ 793 008c FFF7FEFF 		bl	_tm1637Stop
+ 794              	.LVL57:
+ 382:Core/Src/main.c ****     _tm1637WriteByte(0xc0);
+ 795              		.loc 1 382 5 view .LVU181
+ 796 0090 FFF7FEFF 		bl	_tm1637Start
+ 797              	.LVL58:
+ 383:Core/Src/main.c ****     _tm1637ReadResult();
+ 798              		.loc 1 383 5 view .LVU182
+ 799 0094 C020     		movs	r0, #192
+ 800 0096 FFF7FEFF 		bl	_tm1637WriteByte
+ 801              	.LVL59:
+ 384:Core/Src/main.c **** 
+ 802              		.loc 1 384 5 view .LVU183
+ 803 009a FFF7FEFF 		bl	_tm1637ReadResult
+ 804              	.LVL60:
+ 386:Core/Src/main.c ****         _tm1637WriteByte(digitArr[3 - i]);
+ 805              		.loc 1 386 5 view .LVU184
+ 806              	.LBB10:
+ 386:Core/Src/main.c ****         _tm1637WriteByte(digitArr[3 - i]);
+ 807              		.loc 1 386 10 view .LVU185
+ 386:Core/Src/main.c ****         _tm1637WriteByte(digitArr[3 - i]);
+ 808              		.loc 1 386 14 is_stmt 0 view .LVU186
+ 809 009e 0024     		movs	r4, #0
+ 810              	.LVL61:
+ 386:Core/Src/main.c ****         _tm1637WriteByte(digitArr[3 - i]);
+ 811              		.loc 1 386 5 view .LVU187
+ 812 00a0 0AE0     		b	.L51
+ 813              	.LVL62:
+ 814              	.L52:
+ 387:Core/Src/main.c ****         _tm1637ReadResult();
+ 815              		.loc 1 387 9 is_stmt 1 discriminator 3 view .LVU188
+ 387:Core/Src/main.c ****         _tm1637ReadResult();
+ 816              		.loc 1 387 37 is_stmt 0 discriminator 3 view .LVU189
+ 817 00a2 C4F10303 		rsb	r3, r4, #3
+ARM GAS  C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s 			page 25
+
+
+ 387:Core/Src/main.c ****         _tm1637ReadResult();
+ 818              		.loc 1 387 9 discriminator 3 view .LVU190
+ 819 00a6 0833     		adds	r3, r3, #8
+ 820 00a8 6B44     		add	r3, sp, r3
+ 821 00aa 13F8040C 		ldrb	r0, [r3, #-4]	@ zero_extendqisi2
+ 822 00ae FFF7FEFF 		bl	_tm1637WriteByte
+ 823              	.LVL63:
+ 388:Core/Src/main.c ****     }
+ 824              		.loc 1 388 9 is_stmt 1 discriminator 3 view .LVU191
+ 825 00b2 FFF7FEFF 		bl	_tm1637ReadResult
+ 826              	.LVL64:
+ 386:Core/Src/main.c ****         _tm1637WriteByte(digitArr[3 - i]);
+ 827              		.loc 1 386 28 discriminator 3 view .LVU192
+ 828 00b6 0134     		adds	r4, r4, #1
+ 829              	.LVL65:
+ 830              	.L51:
+ 386:Core/Src/main.c ****         _tm1637WriteByte(digitArr[3 - i]);
+ 831              		.loc 1 386 23 discriminator 1 view .LVU193
+ 832 00b8 032C     		cmp	r4, #3
+ 833 00ba F2DD     		ble	.L52
+ 834              	.LBE10:
+ 391:Core/Src/main.c **** }
+ 835              		.loc 1 391 5 view .LVU194
+ 836 00bc FFF7FEFF 		bl	_tm1637Stop
+ 837              	.LVL66:
+ 392:Core/Src/main.c **** 
+ 838              		.loc 1 392 1 is_stmt 0 view .LVU195
+ 839 00c0 02B0     		add	sp, sp, #8
+ 840              	.LCFI14:
+ 841              		.cfi_def_cfa_offset 8
+ 842              		@ sp needed
+ 843 00c2 10BD     		pop	{r4, pc}
+ 844              	.LVL67:
+ 845              	.L58:
+ 392:Core/Src/main.c **** 
+ 846              		.loc 1 392 1 view .LVU196
+ 847              		.align	2
+ 848              	.L57:
+ 849 00c4 67666666 		.word	1717986919
+ 850 00c8 00000000 		.word	segmentMap
+ 851              		.cfi_endproc
+ 852              	.LFE72:
+ 854              		.section	.text.HAL_TIM_PeriodElapsedCallback,"ax",%progbits
+ 855              		.align	1
+ 856              		.global	HAL_TIM_PeriodElapsedCallback
+ 857              		.syntax unified
+ 858              		.thumb
+ 859              		.thumb_func
+ 861              	HAL_TIM_PeriodElapsedCallback:
+ 862              	.LVL68:
+ 863              	.LFB71:
+ 320:Core/Src/main.c ****     if(htim -> Instance == TIM2)
+ 864              		.loc 1 320 1 is_stmt 1 view -0
+ 865              		.cfi_startproc
+ 866              		@ args = 0, pretend = 0, frame = 0
+ 867              		@ frame_needed = 0, uses_anonymous_args = 0
+ 321:Core/Src/main.c ****     {
+ARM GAS  C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s 			page 26
+
+
+ 868              		.loc 1 321 5 view .LVU198
+ 321:Core/Src/main.c ****     {
+ 869              		.loc 1 321 13 is_stmt 0 view .LVU199
+ 870 0000 0368     		ldr	r3, [r0]
+ 321:Core/Src/main.c ****     {
+ 871              		.loc 1 321 7 view .LVU200
+ 872 0002 B3F1804F 		cmp	r3, #1073741824
+ 873 0006 00D0     		beq	.L71
+ 874 0008 7047     		bx	lr
+ 875              	.L71:
+ 320:Core/Src/main.c ****     if(htim -> Instance == TIM2)
+ 876              		.loc 1 320 1 view .LVU201
+ 877 000a 10B5     		push	{r4, lr}
+ 878              	.LCFI15:
+ 879              		.cfi_def_cfa_offset 8
+ 880              		.cfi_offset 4, -8
+ 881              		.cfi_offset 14, -4
+ 323:Core/Src/main.c ****         __HAL_TIM_SET_COUNTER(&htim1, 0);
+ 882              		.loc 1 323 9 is_stmt 1 view .LVU202
+ 883 000c 0122     		movs	r2, #1
+ 884 000e 4FF40071 		mov	r1, #512
+ 885 0012 2D48     		ldr	r0, .L72
+ 886              	.LVL69:
+ 323:Core/Src/main.c ****         __HAL_TIM_SET_COUNTER(&htim1, 0);
+ 887              		.loc 1 323 9 is_stmt 0 view .LVU203
+ 888 0014 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 889              	.LVL70:
+ 324:Core/Src/main.c ****         while (__HAL_TIM_GET_COUNTER(&htim1) < 10);
+ 890              		.loc 1 324 9 is_stmt 1 view .LVU204
+ 891 0018 2C4B     		ldr	r3, .L72+4
+ 892 001a 1A68     		ldr	r2, [r3]
+ 893 001c 0023     		movs	r3, #0
+ 894 001e 5362     		str	r3, [r2, #36]
+ 325:Core/Src/main.c ****         HAL_GPIO_WritePin(TRIG_PORT, TRIG_PIN, GPIO_PIN_RESET);
+ 895              		.loc 1 325 9 view .LVU205
+ 896              	.L61:
+ 325:Core/Src/main.c ****         HAL_GPIO_WritePin(TRIG_PORT, TRIG_PIN, GPIO_PIN_RESET);
+ 897              		.loc 1 325 46 discriminator 1 view .LVU206
+ 325:Core/Src/main.c ****         HAL_GPIO_WritePin(TRIG_PORT, TRIG_PIN, GPIO_PIN_RESET);
+ 898              		.loc 1 325 16 is_stmt 0 discriminator 1 view .LVU207
+ 899 0020 536A     		ldr	r3, [r2, #36]
+ 325:Core/Src/main.c ****         HAL_GPIO_WritePin(TRIG_PORT, TRIG_PIN, GPIO_PIN_RESET);
+ 900              		.loc 1 325 46 discriminator 1 view .LVU208
+ 901 0022 092B     		cmp	r3, #9
+ 902 0024 FCD9     		bls	.L61
+ 326:Core/Src/main.c ****         pMillis = HAL_GetTick();
+ 903              		.loc 1 326 9 is_stmt 1 view .LVU209
+ 904 0026 0022     		movs	r2, #0
+ 905 0028 4FF40071 		mov	r1, #512
+ 906 002c 2648     		ldr	r0, .L72
+ 907 002e FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 908              	.LVL71:
+ 327:Core/Src/main.c ****         while (!(HAL_GPIO_ReadPin (ECHO_PORT, ECHO_PIN)) && pMillis + 10 > HAL_GetTick());
+ 909              		.loc 1 327 9 view .LVU210
+ 327:Core/Src/main.c ****         while (!(HAL_GPIO_ReadPin (ECHO_PORT, ECHO_PIN)) && pMillis + 10 > HAL_GetTick());
+ 910              		.loc 1 327 19 is_stmt 0 view .LVU211
+ 911 0032 FFF7FEFF 		bl	HAL_GetTick
+ARM GAS  C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s 			page 27
+
+
+ 912              	.LVL72:
+ 327:Core/Src/main.c ****         while (!(HAL_GPIO_ReadPin (ECHO_PORT, ECHO_PIN)) && pMillis + 10 > HAL_GetTick());
+ 913              		.loc 1 327 17 view .LVU212
+ 914 0036 264B     		ldr	r3, .L72+8
+ 915 0038 1860     		str	r0, [r3]
+ 328:Core/Src/main.c ****         Value1 = __HAL_TIM_GET_COUNTER (&htim1);
+ 916              		.loc 1 328 9 is_stmt 1 view .LVU213
+ 917              	.L63:
+ 328:Core/Src/main.c ****         Value1 = __HAL_TIM_GET_COUNTER (&htim1);
+ 918              		.loc 1 328 58 discriminator 2 view .LVU214
+ 328:Core/Src/main.c ****         Value1 = __HAL_TIM_GET_COUNTER (&htim1);
+ 919              		.loc 1 328 18 is_stmt 0 discriminator 2 view .LVU215
+ 920 003a 4FF48071 		mov	r1, #256
+ 921 003e 2248     		ldr	r0, .L72
+ 922 0040 FFF7FEFF 		bl	HAL_GPIO_ReadPin
+ 923              	.LVL73:
+ 328:Core/Src/main.c ****         Value1 = __HAL_TIM_GET_COUNTER (&htim1);
+ 924              		.loc 1 328 58 discriminator 2 view .LVU216
+ 925 0044 30B9     		cbnz	r0, .L62
+ 328:Core/Src/main.c ****         Value1 = __HAL_TIM_GET_COUNTER (&htim1);
+ 926              		.loc 1 328 69 discriminator 1 view .LVU217
+ 927 0046 224B     		ldr	r3, .L72+8
+ 928 0048 1C68     		ldr	r4, [r3]
+ 929 004a 0A34     		adds	r4, r4, #10
+ 328:Core/Src/main.c ****         Value1 = __HAL_TIM_GET_COUNTER (&htim1);
+ 930              		.loc 1 328 76 discriminator 1 view .LVU218
+ 931 004c FFF7FEFF 		bl	HAL_GetTick
+ 932              	.LVL74:
+ 328:Core/Src/main.c ****         Value1 = __HAL_TIM_GET_COUNTER (&htim1);
+ 933              		.loc 1 328 58 discriminator 1 view .LVU219
+ 934 0050 8442     		cmp	r4, r0
+ 935 0052 F2D8     		bhi	.L63
+ 936              	.L62:
+ 329:Core/Src/main.c ****         pMillis = HAL_GetTick();
+ 937              		.loc 1 329 9 is_stmt 1 view .LVU220
+ 329:Core/Src/main.c ****         pMillis = HAL_GetTick();
+ 938              		.loc 1 329 18 is_stmt 0 view .LVU221
+ 939 0054 1D4B     		ldr	r3, .L72+4
+ 940 0056 1B68     		ldr	r3, [r3]
+ 941 0058 5A6A     		ldr	r2, [r3, #36]
+ 329:Core/Src/main.c ****         pMillis = HAL_GetTick();
+ 942              		.loc 1 329 16 view .LVU222
+ 943 005a 1E4B     		ldr	r3, .L72+12
+ 944 005c 1A60     		str	r2, [r3]
+ 330:Core/Src/main.c ****         while ((HAL_GPIO_ReadPin (ECHO_PORT, ECHO_PIN)) && pMillis + 50 > HAL_GetTick());
+ 945              		.loc 1 330 9 is_stmt 1 view .LVU223
+ 330:Core/Src/main.c ****         while ((HAL_GPIO_ReadPin (ECHO_PORT, ECHO_PIN)) && pMillis + 50 > HAL_GetTick());
+ 946              		.loc 1 330 19 is_stmt 0 view .LVU224
+ 947 005e FFF7FEFF 		bl	HAL_GetTick
+ 948              	.LVL75:
+ 330:Core/Src/main.c ****         while ((HAL_GPIO_ReadPin (ECHO_PORT, ECHO_PIN)) && pMillis + 50 > HAL_GetTick());
+ 949              		.loc 1 330 17 view .LVU225
+ 950 0062 1B4B     		ldr	r3, .L72+8
+ 951 0064 1860     		str	r0, [r3]
+ 331:Core/Src/main.c ****         Value2 = __HAL_TIM_GET_COUNTER (&htim1);
+ 952              		.loc 1 331 9 is_stmt 1 view .LVU226
+ 953              	.L65:
+ARM GAS  C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s 			page 28
+
+
+ 331:Core/Src/main.c ****         Value2 = __HAL_TIM_GET_COUNTER (&htim1);
+ 954              		.loc 1 331 57 discriminator 2 view .LVU227
+ 331:Core/Src/main.c ****         Value2 = __HAL_TIM_GET_COUNTER (&htim1);
+ 955              		.loc 1 331 17 is_stmt 0 discriminator 2 view .LVU228
+ 956 0066 4FF48071 		mov	r1, #256
+ 957 006a 1748     		ldr	r0, .L72
+ 958 006c FFF7FEFF 		bl	HAL_GPIO_ReadPin
+ 959              	.LVL76:
+ 331:Core/Src/main.c ****         Value2 = __HAL_TIM_GET_COUNTER (&htim1);
+ 960              		.loc 1 331 57 discriminator 2 view .LVU229
+ 961 0070 30B1     		cbz	r0, .L64
+ 331:Core/Src/main.c ****         Value2 = __HAL_TIM_GET_COUNTER (&htim1);
+ 962              		.loc 1 331 68 discriminator 1 view .LVU230
+ 963 0072 174B     		ldr	r3, .L72+8
+ 964 0074 1C68     		ldr	r4, [r3]
+ 965 0076 3234     		adds	r4, r4, #50
+ 331:Core/Src/main.c ****         Value2 = __HAL_TIM_GET_COUNTER (&htim1);
+ 966              		.loc 1 331 75 discriminator 1 view .LVU231
+ 967 0078 FFF7FEFF 		bl	HAL_GetTick
+ 968              	.LVL77:
+ 331:Core/Src/main.c ****         Value2 = __HAL_TIM_GET_COUNTER (&htim1);
+ 969              		.loc 1 331 57 discriminator 1 view .LVU232
+ 970 007c 8442     		cmp	r4, r0
+ 971 007e F2D8     		bhi	.L65
+ 972              	.L64:
+ 332:Core/Src/main.c **** 
+ 973              		.loc 1 332 9 is_stmt 1 view .LVU233
+ 332:Core/Src/main.c **** 
+ 974              		.loc 1 332 18 is_stmt 0 view .LVU234
+ 975 0080 124B     		ldr	r3, .L72+4
+ 976 0082 1B68     		ldr	r3, [r3]
+ 977 0084 5B6A     		ldr	r3, [r3, #36]
+ 332:Core/Src/main.c **** 
+ 978              		.loc 1 332 16 view .LVU235
+ 979 0086 144A     		ldr	r2, .L72+16
+ 980 0088 1360     		str	r3, [r2]
+ 334:Core/Src/main.c ****         if(Temp < 0 || Temp > 400) return;
+ 981              		.loc 1 334 9 is_stmt 1 view .LVU236
+ 334:Core/Src/main.c ****         if(Temp < 0 || Temp > 400) return;
+ 982              		.loc 1 334 24 is_stmt 0 view .LVU237
+ 983 008a 124A     		ldr	r2, .L72+12
+ 984 008c 1268     		ldr	r2, [r2]
+ 985 008e 9B1A     		subs	r3, r3, r2
+ 334:Core/Src/main.c ****         if(Temp < 0 || Temp > 400) return;
+ 986              		.loc 1 334 34 view .LVU238
+ 987 0090 124A     		ldr	r2, .L72+20
+ 988 0092 A2FB0323 		umull	r2, r3, r2, r3
+ 989 0096 D808     		lsrs	r0, r3, #3
+ 334:Core/Src/main.c ****         if(Temp < 0 || Temp > 400) return;
+ 990              		.loc 1 334 14 view .LVU239
+ 991 0098 C3F3CF03 		ubfx	r3, r3, #3, #16
+ 992 009c 104A     		ldr	r2, .L72+24
+ 993 009e 1380     		strh	r3, [r2]	@ movhi
+ 335:Core/Src/main.c ****         Distance = Temp;
+ 994              		.loc 1 335 9 is_stmt 1 view .LVU240
+ 335:Core/Src/main.c ****         Distance = Temp;
+ 995              		.loc 1 335 11 is_stmt 0 view .LVU241
+ARM GAS  C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s 			page 29
+
+
+ 996 00a0 B3F5C87F 		cmp	r3, #400
+ 997 00a4 0AD8     		bhi	.L59
+ 336:Core/Src/main.c **** 
+ 998              		.loc 1 336 9 is_stmt 1 view .LVU242
+ 336:Core/Src/main.c **** 
+ 999              		.loc 1 336 18 is_stmt 0 view .LVU243
+ 1000 00a6 0F4A     		ldr	r2, .L72+28
+ 1001 00a8 1380     		strh	r3, [r2]	@ movhi
+ 338:Core/Src/main.c ****             tm1637DisplayDecimal(Distance - Saved);
+ 1002              		.loc 1 338 9 is_stmt 1 view .LVU244
+ 338:Core/Src/main.c ****             tm1637DisplayDecimal(Distance - Saved);
+ 1003              		.loc 1 338 12 is_stmt 0 view .LVU245
+ 1004 00aa 0F4B     		ldr	r3, .L72+32
+ 1005 00ac 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 338:Core/Src/main.c ****             tm1637DisplayDecimal(Distance - Saved);
+ 1006              		.loc 1 338 11 view .LVU246
+ 1007 00ae 33B1     		cbz	r3, .L66
+ 339:Core/Src/main.c ****         } else {
+ 1008              		.loc 1 339 13 is_stmt 1 view .LVU247
+ 1009 00b0 80B2     		uxth	r0, r0
+ 1010 00b2 0E4B     		ldr	r3, .L72+36
+ 1011 00b4 1B88     		ldrh	r3, [r3]
+ 1012 00b6 C01A     		subs	r0, r0, r3
+ 1013 00b8 FFF7FEFF 		bl	tm1637DisplayDecimal
+ 1014              	.LVL78:
+ 1015              	.L59:
+ 344:Core/Src/main.c **** 
+ 1016              		.loc 1 344 1 is_stmt 0 view .LVU248
+ 1017 00bc 10BD     		pop	{r4, pc}
+ 1018              	.L66:
+ 341:Core/Src/main.c ****         }  
+ 1019              		.loc 1 341 13 is_stmt 1 view .LVU249
+ 1020 00be 80B2     		uxth	r0, r0
+ 1021 00c0 FFF7FEFF 		bl	tm1637DisplayDecimal
+ 1022              	.LVL79:
+ 1023 00c4 FAE7     		b	.L59
+ 1024              	.L73:
+ 1025 00c6 00BF     		.align	2
+ 1026              	.L72:
+ 1027 00c8 00080140 		.word	1073809408
+ 1028 00cc 00000000 		.word	htim1
+ 1029 00d0 00000000 		.word	pMillis
+ 1030 00d4 00000000 		.word	Value1
+ 1031 00d8 00000000 		.word	Value2
+ 1032 00dc BF3CB622 		.word	582368447
+ 1033 00e0 00000000 		.word	Temp
+ 1034 00e4 00000000 		.word	Distance
+ 1035 00e8 00000000 		.word	Flag
+ 1036 00ec 00000000 		.word	Saved
+ 1037              		.cfi_endproc
+ 1038              	.LFE71:
+ 1040              		.section	.text.tm1637SetBrightness,"ax",%progbits
+ 1041              		.align	1
+ 1042              		.global	tm1637SetBrightness
+ 1043              		.syntax unified
+ 1044              		.thumb
+ 1045              		.thumb_func
+ARM GAS  C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s 			page 30
+
+
+ 1047              	tm1637SetBrightness:
+ 1048              	.LVL80:
+ 1049              	.LFB73:
+ 395:Core/Src/main.c ****     _tm1637Start();
+ 1050              		.loc 1 395 1 view -0
+ 1051              		.cfi_startproc
+ 1052              		@ args = 0, pretend = 0, frame = 0
+ 1053              		@ frame_needed = 0, uses_anonymous_args = 0
+ 395:Core/Src/main.c ****     _tm1637Start();
+ 1054              		.loc 1 395 1 is_stmt 0 view .LVU251
+ 1055 0000 10B5     		push	{r4, lr}
+ 1056              	.LCFI16:
+ 1057              		.cfi_def_cfa_offset 8
+ 1058              		.cfi_offset 4, -8
+ 1059              		.cfi_offset 14, -4
+ 1060 0002 0446     		mov	r4, r0
+ 396:Core/Src/main.c ****     _tm1637WriteByte(0x87 + brightness);
+ 1061              		.loc 1 396 5 is_stmt 1 view .LVU252
+ 1062 0004 FFF7FEFF 		bl	_tm1637Start
+ 1063              	.LVL81:
+ 397:Core/Src/main.c ****     _tm1637ReadResult();
+ 1064              		.loc 1 397 5 view .LVU253
+ 1065 0008 A4F17900 		sub	r0, r4, #121
+ 1066 000c C0B2     		uxtb	r0, r0
+ 1067 000e FFF7FEFF 		bl	_tm1637WriteByte
+ 1068              	.LVL82:
+ 398:Core/Src/main.c ****     _tm1637Stop();
+ 1069              		.loc 1 398 5 view .LVU254
+ 1070 0012 FFF7FEFF 		bl	_tm1637ReadResult
+ 1071              	.LVL83:
+ 399:Core/Src/main.c **** }
+ 1072              		.loc 1 399 5 view .LVU255
+ 1073 0016 FFF7FEFF 		bl	_tm1637Stop
+ 1074              	.LVL84:
+ 400:Core/Src/main.c **** 
+ 1075              		.loc 1 400 1 is_stmt 0 view .LVU256
+ 1076 001a 10BD     		pop	{r4, pc}
+ 1077              		.cfi_endproc
+ 1078              	.LFE73:
+ 1080              		.section	.text.Error_Handler,"ax",%progbits
+ 1081              		.align	1
+ 1082              		.global	Error_Handler
+ 1083              		.syntax unified
+ 1084              		.thumb
+ 1085              		.thumb_func
+ 1087              	Error_Handler:
+ 1088              	.LFB83:
+ 471:Core/Src/main.c **** /* USER CODE END 4 */
+ 472:Core/Src/main.c **** 
+ 473:Core/Src/main.c **** /**
+ 474:Core/Src/main.c ****   * @brief  This function is executed in case of error occurrence.
+ 475:Core/Src/main.c ****   * @retval None
+ 476:Core/Src/main.c ****   */
+ 477:Core/Src/main.c **** void Error_Handler(void)
+ 478:Core/Src/main.c **** {
+ 1089              		.loc 1 478 1 is_stmt 1 view -0
+ 1090              		.cfi_startproc
+ARM GAS  C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s 			page 31
+
+
+ 1091              		@ Volatile: function does not return.
+ 1092              		@ args = 0, pretend = 0, frame = 0
+ 1093              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1094              		@ link register save eliminated.
+ 479:Core/Src/main.c ****   /* USER CODE BEGIN Error_Handler_Debug */
+ 480:Core/Src/main.c ****   /* User can add his own implementation to report the HAL error return state */
+ 481:Core/Src/main.c ****   __disable_irq();
+ 1095              		.loc 1 481 3 view .LVU258
+ 1096              	.LBB11:
+ 1097              	.LBI11:
+ 1098              		.file 2 "C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include/cmsis_gc
+   1:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h **** /**************************************************************************//**
+   2:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h ****  * @file     cmsis_gcc.h
+   3:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h ****  * @brief    CMSIS compiler GCC header file
+   4:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h ****  * @version  V5.0.4
+   5:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h ****  * @date     09. April 2018
+   6:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h ****  ******************************************************************************/
+   7:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h **** /*
+   8:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h ****  * Copyright (c) 2009-2018 Arm Limited. All rights reserved.
+   9:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h ****  *
+  10:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h ****  * SPDX-License-Identifier: Apache-2.0
+  11:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h ****  *
+  12:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h ****  * Licensed under the Apache License, Version 2.0 (the License); you may
+  13:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h ****  * not use this file except in compliance with the License.
+  14:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h ****  * You may obtain a copy of the License at
+  15:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h ****  *
+  16:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h ****  * www.apache.org/licenses/LICENSE-2.0
+  17:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h ****  *
+  18:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h ****  * Unless required by applicable law or agreed to in writing, software
+  19:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h ****  * distributed under the License is distributed on an AS IS BASIS, WITHOUT
+  20:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h ****  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  21:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h ****  * See the License for the specific language governing permissions and
+  22:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h ****  * limitations under the License.
+  23:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h ****  */
+  24:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h **** 
+  25:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h **** #ifndef __CMSIS_GCC_H
+  26:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h **** #define __CMSIS_GCC_H
+  27:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h **** 
+  28:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h **** /* ignore some GCC warnings */
+  29:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h **** #pragma GCC diagnostic push
+  30:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h **** #pragma GCC diagnostic ignored "-Wsign-conversion"
+  31:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h **** #pragma GCC diagnostic ignored "-Wconversion"
+  32:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h **** #pragma GCC diagnostic ignored "-Wunused-parameter"
+  33:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h **** 
+  34:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h **** /* Fallback for __has_builtin */
+  35:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h **** #ifndef __has_builtin
+  36:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h ****   #define __has_builtin(x) (0)
+  37:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h **** #endif
+  38:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h **** 
+  39:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h **** /* CMSIS compiler specific defines */
+  40:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h **** #ifndef   __ASM
+  41:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h ****   #define __ASM                                  __asm
+  42:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h **** #endif
+  43:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h **** #ifndef   __INLINE
+  44:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h ****   #define __INLINE                               inline
+  45:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h **** #endif
+  46:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h **** #ifndef   __STATIC_INLINE
+ARM GAS  C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s 			page 32
+
+
+  47:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h ****   #define __STATIC_INLINE                        static inline
+  48:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h **** #endif
+  49:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h **** #ifndef   __STATIC_FORCEINLINE                 
+  50:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h ****   #define __STATIC_FORCEINLINE                   __attribute__((always_inline)) static inline
+  51:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h **** #endif                                           
+  52:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h **** #ifndef   __NO_RETURN
+  53:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h ****   #define __NO_RETURN                            __attribute__((__noreturn__))
+  54:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h **** #endif
+  55:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h **** #ifndef   __USED
+  56:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h ****   #define __USED                                 __attribute__((used))
+  57:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h **** #endif
+  58:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h **** #ifndef   __WEAK
+  59:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h ****   #define __WEAK                                 __attribute__((weak))
+  60:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h **** #endif
+  61:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h **** #ifndef   __PACKED
+  62:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h ****   #define __PACKED                               __attribute__((packed, aligned(1)))
+  63:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h **** #endif
+  64:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h **** #ifndef   __PACKED_STRUCT
+  65:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h ****   #define __PACKED_STRUCT                        struct __attribute__((packed, aligned(1)))
+  66:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h **** #endif
+  67:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h **** #ifndef   __PACKED_UNION
+  68:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h ****   #define __PACKED_UNION                         union __attribute__((packed, aligned(1)))
+  69:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h **** #endif
+  70:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h **** #ifndef   __UNALIGNED_UINT32        /* deprecated */
+  71:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h ****   #pragma GCC diagnostic push
+  72:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wpacked"
+  73:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wattributes"
+  74:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h ****   struct __attribute__((packed)) T_UINT32 { uint32_t v; };
+  75:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h ****   #pragma GCC diagnostic pop
+  76:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h ****   #define __UNALIGNED_UINT32(x)                  (((struct T_UINT32 *)(x))->v)
+  77:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h **** #endif
+  78:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h **** #ifndef   __UNALIGNED_UINT16_WRITE
+  79:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h ****   #pragma GCC diagnostic push
+  80:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wpacked"
+  81:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wattributes"
+  82:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h ****   __PACKED_STRUCT T_UINT16_WRITE { uint16_t v; };
+  83:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h ****   #pragma GCC diagnostic pop
+  84:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h ****   #define __UNALIGNED_UINT16_WRITE(addr, val)    (void)((((struct T_UINT16_WRITE *)(void *)(addr))-
+  85:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h **** #endif
+  86:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h **** #ifndef   __UNALIGNED_UINT16_READ
+  87:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h ****   #pragma GCC diagnostic push
+  88:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wpacked"
+  89:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wattributes"
+  90:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h ****   __PACKED_STRUCT T_UINT16_READ { uint16_t v; };
+  91:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h ****   #pragma GCC diagnostic pop
+  92:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h ****   #define __UNALIGNED_UINT16_READ(addr)          (((const struct T_UINT16_READ *)(const void *)(add
+  93:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h **** #endif
+  94:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h **** #ifndef   __UNALIGNED_UINT32_WRITE
+  95:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h ****   #pragma GCC diagnostic push
+  96:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wpacked"
+  97:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wattributes"
+  98:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h ****   __PACKED_STRUCT T_UINT32_WRITE { uint32_t v; };
+  99:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h ****   #pragma GCC diagnostic pop
+ 100:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h ****   #define __UNALIGNED_UINT32_WRITE(addr, val)    (void)((((struct T_UINT32_WRITE *)(void *)(addr))-
+ 101:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h **** #endif
+ 102:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h **** #ifndef   __UNALIGNED_UINT32_READ
+ 103:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h ****   #pragma GCC diagnostic push
+ARM GAS  C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s 			page 33
+
+
+ 104:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wpacked"
+ 105:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wattributes"
+ 106:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h ****   __PACKED_STRUCT T_UINT32_READ { uint32_t v; };
+ 107:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h ****   #pragma GCC diagnostic pop
+ 108:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h ****   #define __UNALIGNED_UINT32_READ(addr)          (((const struct T_UINT32_READ *)(const void *)(add
+ 109:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h **** #endif
+ 110:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h **** #ifndef   __ALIGNED
+ 111:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h ****   #define __ALIGNED(x)                           __attribute__((aligned(x)))
+ 112:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h **** #endif
+ 113:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h **** #ifndef   __RESTRICT
+ 114:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h ****   #define __RESTRICT                             __restrict
+ 115:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h **** #endif
+ 116:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h **** 
+ 117:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h **** 
+ 118:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h **** /* ###########################  Core Function Access  ########################### */
+ 119:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h **** /** \ingroup  CMSIS_Core_FunctionInterface
+ 120:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h ****     \defgroup CMSIS_Core_RegAccFunctions CMSIS Core Register Access Functions
+ 121:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h ****   @{
+ 122:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h ****  */
+ 123:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h **** 
+ 124:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h **** /**
+ 125:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h ****   \brief   Enable IRQ Interrupts
+ 126:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h ****   \details Enables IRQ interrupts by clearing the I-bit in the CPSR.
+ 127:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h ****            Can only be executed in Privileged modes.
+ 128:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h ****  */
+ 129:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h **** __STATIC_FORCEINLINE void __enable_irq(void)
+ 130:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h **** {
+ 131:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h ****   __ASM volatile ("cpsie i" : : : "memory");
+ 132:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h **** }
+ 133:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h **** 
+ 134:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h **** 
+ 135:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h **** /**
+ 136:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h ****   \brief   Disable IRQ Interrupts
+ 137:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h ****   \details Disables IRQ interrupts by setting the I-bit in the CPSR.
+ 138:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h ****            Can only be executed in Privileged modes.
+ 139:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h ****  */
+ 140:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h **** __STATIC_FORCEINLINE void __disable_irq(void)
+ 1099              		.loc 2 140 27 view .LVU259
+ 1100              	.LBB12:
+ 141:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h **** {
+ 142:C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include\cmsis_gcc.h ****   __ASM volatile ("cpsid i" : : : "memory");
+ 1101              		.loc 2 142 3 view .LVU260
+ 1102              		.syntax unified
+ 1103              	@ 142 "C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Include/cmsis_gcc.h
+ 1104 0000 72B6     		cpsid i
+ 1105              	@ 0 "" 2
+ 1106              		.thumb
+ 1107              		.syntax unified
+ 1108              	.L77:
+ 1109              	.LBE12:
+ 1110              	.LBE11:
+ 482:Core/Src/main.c ****   while (1)
+ 1111              		.loc 1 482 3 discriminator 1 view .LVU261
+ 483:Core/Src/main.c ****   {
+ 484:Core/Src/main.c ****   }
+ 1112              		.loc 1 484 3 discriminator 1 view .LVU262
+ 482:Core/Src/main.c ****   while (1)
+ARM GAS  C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s 			page 34
+
+
+ 1113              		.loc 1 482 9 discriminator 1 view .LVU263
+ 1114 0002 FEE7     		b	.L77
+ 1115              		.cfi_endproc
+ 1116              	.LFE83:
+ 1118              		.section	.text.MX_TIM1_Init,"ax",%progbits
+ 1119              		.align	1
+ 1120              		.syntax unified
+ 1121              		.thumb
+ 1122              		.thumb_func
+ 1124              	MX_TIM1_Init:
+ 1125              	.LFB67:
+ 175:Core/Src/main.c **** 
+ 1126              		.loc 1 175 1 view -0
+ 1127              		.cfi_startproc
+ 1128              		@ args = 0, pretend = 0, frame = 24
+ 1129              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1130 0000 00B5     		push	{lr}
+ 1131              	.LCFI17:
+ 1132              		.cfi_def_cfa_offset 4
+ 1133              		.cfi_offset 14, -4
+ 1134 0002 87B0     		sub	sp, sp, #28
+ 1135              	.LCFI18:
+ 1136              		.cfi_def_cfa_offset 32
+ 180:Core/Src/main.c ****   TIM_MasterConfigTypeDef sMasterConfig = {0};
+ 1137              		.loc 1 180 3 view .LVU265
+ 180:Core/Src/main.c ****   TIM_MasterConfigTypeDef sMasterConfig = {0};
+ 1138              		.loc 1 180 26 is_stmt 0 view .LVU266
+ 1139 0004 0023     		movs	r3, #0
+ 1140 0006 0293     		str	r3, [sp, #8]
+ 1141 0008 0393     		str	r3, [sp, #12]
+ 1142 000a 0493     		str	r3, [sp, #16]
+ 1143 000c 0593     		str	r3, [sp, #20]
+ 181:Core/Src/main.c **** 
+ 1144              		.loc 1 181 3 is_stmt 1 view .LVU267
+ 181:Core/Src/main.c **** 
+ 1145              		.loc 1 181 27 is_stmt 0 view .LVU268
+ 1146 000e 0093     		str	r3, [sp]
+ 1147 0010 0193     		str	r3, [sp, #4]
+ 185:Core/Src/main.c ****   htim1.Init.Prescaler = 71;
+ 1148              		.loc 1 185 3 is_stmt 1 view .LVU269
+ 185:Core/Src/main.c ****   htim1.Init.Prescaler = 71;
+ 1149              		.loc 1 185 18 is_stmt 0 view .LVU270
+ 1150 0012 1448     		ldr	r0, .L86
+ 1151 0014 144A     		ldr	r2, .L86+4
+ 1152 0016 0260     		str	r2, [r0]
+ 186:Core/Src/main.c ****   htim1.Init.CounterMode = TIM_COUNTERMODE_UP;
+ 1153              		.loc 1 186 3 is_stmt 1 view .LVU271
+ 186:Core/Src/main.c ****   htim1.Init.CounterMode = TIM_COUNTERMODE_UP;
+ 1154              		.loc 1 186 24 is_stmt 0 view .LVU272
+ 1155 0018 4722     		movs	r2, #71
+ 1156 001a 4260     		str	r2, [r0, #4]
+ 187:Core/Src/main.c ****   htim1.Init.Period = 65535;
+ 1157              		.loc 1 187 3 is_stmt 1 view .LVU273
+ 187:Core/Src/main.c ****   htim1.Init.Period = 65535;
+ 1158              		.loc 1 187 26 is_stmt 0 view .LVU274
+ 1159 001c 8360     		str	r3, [r0, #8]
+ 188:Core/Src/main.c ****   htim1.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+ARM GAS  C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s 			page 35
+
+
+ 1160              		.loc 1 188 3 is_stmt 1 view .LVU275
+ 188:Core/Src/main.c ****   htim1.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+ 1161              		.loc 1 188 21 is_stmt 0 view .LVU276
+ 1162 001e 4FF6FF72 		movw	r2, #65535
+ 1163 0022 C260     		str	r2, [r0, #12]
+ 189:Core/Src/main.c ****   htim1.Init.RepetitionCounter = 0;
+ 1164              		.loc 1 189 3 is_stmt 1 view .LVU277
+ 189:Core/Src/main.c ****   htim1.Init.RepetitionCounter = 0;
+ 1165              		.loc 1 189 28 is_stmt 0 view .LVU278
+ 1166 0024 0361     		str	r3, [r0, #16]
+ 190:Core/Src/main.c ****   htim1.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+ 1167              		.loc 1 190 3 is_stmt 1 view .LVU279
+ 190:Core/Src/main.c ****   htim1.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+ 1168              		.loc 1 190 32 is_stmt 0 view .LVU280
+ 1169 0026 4361     		str	r3, [r0, #20]
+ 191:Core/Src/main.c ****   if (HAL_TIM_Base_Init(&htim1) != HAL_OK)
+ 1170              		.loc 1 191 3 is_stmt 1 view .LVU281
+ 191:Core/Src/main.c ****   if (HAL_TIM_Base_Init(&htim1) != HAL_OK)
+ 1171              		.loc 1 191 32 is_stmt 0 view .LVU282
+ 1172 0028 8361     		str	r3, [r0, #24]
+ 192:Core/Src/main.c ****   {
+ 1173              		.loc 1 192 3 is_stmt 1 view .LVU283
+ 192:Core/Src/main.c ****   {
+ 1174              		.loc 1 192 7 is_stmt 0 view .LVU284
+ 1175 002a FFF7FEFF 		bl	HAL_TIM_Base_Init
+ 1176              	.LVL85:
+ 192:Core/Src/main.c ****   {
+ 1177              		.loc 1 192 6 view .LVU285
+ 1178 002e 90B9     		cbnz	r0, .L83
+ 196:Core/Src/main.c ****   if (HAL_TIM_ConfigClockSource(&htim1, &sClockSourceConfig) != HAL_OK)
+ 1179              		.loc 1 196 3 is_stmt 1 view .LVU286
+ 196:Core/Src/main.c ****   if (HAL_TIM_ConfigClockSource(&htim1, &sClockSourceConfig) != HAL_OK)
+ 1180              		.loc 1 196 34 is_stmt 0 view .LVU287
+ 1181 0030 4FF48053 		mov	r3, #4096
+ 1182 0034 0293     		str	r3, [sp, #8]
+ 197:Core/Src/main.c ****   {
+ 1183              		.loc 1 197 3 is_stmt 1 view .LVU288
+ 197:Core/Src/main.c ****   {
+ 1184              		.loc 1 197 7 is_stmt 0 view .LVU289
+ 1185 0036 02A9     		add	r1, sp, #8
+ 1186 0038 0A48     		ldr	r0, .L86
+ 1187 003a FFF7FEFF 		bl	HAL_TIM_ConfigClockSource
+ 1188              	.LVL86:
+ 197:Core/Src/main.c ****   {
+ 1189              		.loc 1 197 6 view .LVU290
+ 1190 003e 60B9     		cbnz	r0, .L84
+ 201:Core/Src/main.c ****   sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+ 1191              		.loc 1 201 3 is_stmt 1 view .LVU291
+ 201:Core/Src/main.c ****   sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+ 1192              		.loc 1 201 37 is_stmt 0 view .LVU292
+ 1193 0040 0023     		movs	r3, #0
+ 1194 0042 0093     		str	r3, [sp]
+ 202:Core/Src/main.c ****   if (HAL_TIMEx_MasterConfigSynchronization(&htim1, &sMasterConfig) != HAL_OK)
+ 1195              		.loc 1 202 3 is_stmt 1 view .LVU293
+ 202:Core/Src/main.c ****   if (HAL_TIMEx_MasterConfigSynchronization(&htim1, &sMasterConfig) != HAL_OK)
+ 1196              		.loc 1 202 33 is_stmt 0 view .LVU294
+ 1197 0044 0193     		str	r3, [sp, #4]
+ARM GAS  C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s 			page 36
+
+
+ 203:Core/Src/main.c ****   {
+ 1198              		.loc 1 203 3 is_stmt 1 view .LVU295
+ 203:Core/Src/main.c ****   {
+ 1199              		.loc 1 203 7 is_stmt 0 view .LVU296
+ 1200 0046 6946     		mov	r1, sp
+ 1201 0048 0648     		ldr	r0, .L86
+ 1202 004a FFF7FEFF 		bl	HAL_TIMEx_MasterConfigSynchronization
+ 1203              	.LVL87:
+ 203:Core/Src/main.c ****   {
+ 1204              		.loc 1 203 6 view .LVU297
+ 1205 004e 30B9     		cbnz	r0, .L85
+ 210:Core/Src/main.c **** 
+ 1206              		.loc 1 210 1 view .LVU298
+ 1207 0050 07B0     		add	sp, sp, #28
+ 1208              	.LCFI19:
+ 1209              		.cfi_remember_state
+ 1210              		.cfi_def_cfa_offset 4
+ 1211              		@ sp needed
+ 1212 0052 5DF804FB 		ldr	pc, [sp], #4
+ 1213              	.L83:
+ 1214              	.LCFI20:
+ 1215              		.cfi_restore_state
+ 194:Core/Src/main.c ****   }
+ 1216              		.loc 1 194 5 is_stmt 1 view .LVU299
+ 1217 0056 FFF7FEFF 		bl	Error_Handler
+ 1218              	.LVL88:
+ 1219              	.L84:
+ 199:Core/Src/main.c ****   }
+ 1220              		.loc 1 199 5 view .LVU300
+ 1221 005a FFF7FEFF 		bl	Error_Handler
+ 1222              	.LVL89:
+ 1223              	.L85:
+ 205:Core/Src/main.c ****   }
+ 1224              		.loc 1 205 5 view .LVU301
+ 1225 005e FFF7FEFF 		bl	Error_Handler
+ 1226              	.LVL90:
+ 1227              	.L87:
+ 1228 0062 00BF     		.align	2
+ 1229              	.L86:
+ 1230 0064 00000000 		.word	htim1
+ 1231 0068 002C0140 		.word	1073818624
+ 1232              		.cfi_endproc
+ 1233              	.LFE67:
+ 1235              		.section	.text.MX_TIM2_Init,"ax",%progbits
+ 1236              		.align	1
+ 1237              		.syntax unified
+ 1238              		.thumb
+ 1239              		.thumb_func
+ 1241              	MX_TIM2_Init:
+ 1242              	.LFB68:
+ 218:Core/Src/main.c **** 
+ 1243              		.loc 1 218 1 view -0
+ 1244              		.cfi_startproc
+ 1245              		@ args = 0, pretend = 0, frame = 24
+ 1246              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1247 0000 00B5     		push	{lr}
+ 1248              	.LCFI21:
+ARM GAS  C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s 			page 37
+
+
+ 1249              		.cfi_def_cfa_offset 4
+ 1250              		.cfi_offset 14, -4
+ 1251 0002 87B0     		sub	sp, sp, #28
+ 1252              	.LCFI22:
+ 1253              		.cfi_def_cfa_offset 32
+ 223:Core/Src/main.c ****   TIM_MasterConfigTypeDef sMasterConfig = {0};
+ 1254              		.loc 1 223 3 view .LVU303
+ 223:Core/Src/main.c ****   TIM_MasterConfigTypeDef sMasterConfig = {0};
+ 1255              		.loc 1 223 26 is_stmt 0 view .LVU304
+ 1256 0004 0023     		movs	r3, #0
+ 1257 0006 0293     		str	r3, [sp, #8]
+ 1258 0008 0393     		str	r3, [sp, #12]
+ 1259 000a 0493     		str	r3, [sp, #16]
+ 1260 000c 0593     		str	r3, [sp, #20]
+ 224:Core/Src/main.c **** 
+ 1261              		.loc 1 224 3 is_stmt 1 view .LVU305
+ 224:Core/Src/main.c **** 
+ 1262              		.loc 1 224 27 is_stmt 0 view .LVU306
+ 1263 000e 0093     		str	r3, [sp]
+ 1264 0010 0193     		str	r3, [sp, #4]
+ 228:Core/Src/main.c ****   htim2.Init.Prescaler = 7200-1;
+ 1265              		.loc 1 228 3 is_stmt 1 view .LVU307
+ 228:Core/Src/main.c ****   htim2.Init.Prescaler = 7200-1;
+ 1266              		.loc 1 228 18 is_stmt 0 view .LVU308
+ 1267 0012 1448     		ldr	r0, .L96
+ 1268 0014 4FF08042 		mov	r2, #1073741824
+ 1269 0018 0260     		str	r2, [r0]
+ 229:Core/Src/main.c ****   htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
+ 1270              		.loc 1 229 3 is_stmt 1 view .LVU309
+ 229:Core/Src/main.c ****   htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
+ 1271              		.loc 1 229 24 is_stmt 0 view .LVU310
+ 1272 001a 41F61F42 		movw	r2, #7199
+ 1273 001e 4260     		str	r2, [r0, #4]
+ 230:Core/Src/main.c ****   htim2.Init.Period = 2000;
+ 1274              		.loc 1 230 3 is_stmt 1 view .LVU311
+ 230:Core/Src/main.c ****   htim2.Init.Period = 2000;
+ 1275              		.loc 1 230 26 is_stmt 0 view .LVU312
+ 1276 0020 8360     		str	r3, [r0, #8]
+ 231:Core/Src/main.c ****   htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+ 1277              		.loc 1 231 3 is_stmt 1 view .LVU313
+ 231:Core/Src/main.c ****   htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+ 1278              		.loc 1 231 21 is_stmt 0 view .LVU314
+ 1279 0022 4FF4FA62 		mov	r2, #2000
+ 1280 0026 C260     		str	r2, [r0, #12]
+ 232:Core/Src/main.c ****   htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+ 1281              		.loc 1 232 3 is_stmt 1 view .LVU315
+ 232:Core/Src/main.c ****   htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+ 1282              		.loc 1 232 28 is_stmt 0 view .LVU316
+ 1283 0028 0361     		str	r3, [r0, #16]
+ 233:Core/Src/main.c ****   if (HAL_TIM_Base_Init(&htim2) != HAL_OK)
+ 1284              		.loc 1 233 3 is_stmt 1 view .LVU317
+ 233:Core/Src/main.c ****   if (HAL_TIM_Base_Init(&htim2) != HAL_OK)
+ 1285              		.loc 1 233 32 is_stmt 0 view .LVU318
+ 1286 002a 8361     		str	r3, [r0, #24]
+ 234:Core/Src/main.c ****   {
+ 1287              		.loc 1 234 3 is_stmt 1 view .LVU319
+ 234:Core/Src/main.c ****   {
+ARM GAS  C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s 			page 38
+
+
+ 1288              		.loc 1 234 7 is_stmt 0 view .LVU320
+ 1289 002c FFF7FEFF 		bl	HAL_TIM_Base_Init
+ 1290              	.LVL91:
+ 234:Core/Src/main.c ****   {
+ 1291              		.loc 1 234 6 view .LVU321
+ 1292 0030 90B9     		cbnz	r0, .L93
+ 238:Core/Src/main.c ****   if (HAL_TIM_ConfigClockSource(&htim2, &sClockSourceConfig) != HAL_OK)
+ 1293              		.loc 1 238 3 is_stmt 1 view .LVU322
+ 238:Core/Src/main.c ****   if (HAL_TIM_ConfigClockSource(&htim2, &sClockSourceConfig) != HAL_OK)
+ 1294              		.loc 1 238 34 is_stmt 0 view .LVU323
+ 1295 0032 4FF48053 		mov	r3, #4096
+ 1296 0036 0293     		str	r3, [sp, #8]
+ 239:Core/Src/main.c ****   {
+ 1297              		.loc 1 239 3 is_stmt 1 view .LVU324
+ 239:Core/Src/main.c ****   {
+ 1298              		.loc 1 239 7 is_stmt 0 view .LVU325
+ 1299 0038 02A9     		add	r1, sp, #8
+ 1300 003a 0A48     		ldr	r0, .L96
+ 1301 003c FFF7FEFF 		bl	HAL_TIM_ConfigClockSource
+ 1302              	.LVL92:
+ 239:Core/Src/main.c ****   {
+ 1303              		.loc 1 239 6 view .LVU326
+ 1304 0040 60B9     		cbnz	r0, .L94
+ 243:Core/Src/main.c ****   sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+ 1305              		.loc 1 243 3 is_stmt 1 view .LVU327
+ 243:Core/Src/main.c ****   sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+ 1306              		.loc 1 243 37 is_stmt 0 view .LVU328
+ 1307 0042 0023     		movs	r3, #0
+ 1308 0044 0093     		str	r3, [sp]
+ 244:Core/Src/main.c ****   if (HAL_TIMEx_MasterConfigSynchronization(&htim2, &sMasterConfig) != HAL_OK)
+ 1309              		.loc 1 244 3 is_stmt 1 view .LVU329
+ 244:Core/Src/main.c ****   if (HAL_TIMEx_MasterConfigSynchronization(&htim2, &sMasterConfig) != HAL_OK)
+ 1310              		.loc 1 244 33 is_stmt 0 view .LVU330
+ 1311 0046 0193     		str	r3, [sp, #4]
+ 245:Core/Src/main.c ****   {
+ 1312              		.loc 1 245 3 is_stmt 1 view .LVU331
+ 245:Core/Src/main.c ****   {
+ 1313              		.loc 1 245 7 is_stmt 0 view .LVU332
+ 1314 0048 6946     		mov	r1, sp
+ 1315 004a 0648     		ldr	r0, .L96
+ 1316 004c FFF7FEFF 		bl	HAL_TIMEx_MasterConfigSynchronization
+ 1317              	.LVL93:
+ 245:Core/Src/main.c ****   {
+ 1318              		.loc 1 245 6 view .LVU333
+ 1319 0050 30B9     		cbnz	r0, .L95
+ 252:Core/Src/main.c **** 
+ 1320              		.loc 1 252 1 view .LVU334
+ 1321 0052 07B0     		add	sp, sp, #28
+ 1322              	.LCFI23:
+ 1323              		.cfi_remember_state
+ 1324              		.cfi_def_cfa_offset 4
+ 1325              		@ sp needed
+ 1326 0054 5DF804FB 		ldr	pc, [sp], #4
+ 1327              	.L93:
+ 1328              	.LCFI24:
+ 1329              		.cfi_restore_state
+ 236:Core/Src/main.c ****   }
+ARM GAS  C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s 			page 39
+
+
+ 1330              		.loc 1 236 5 is_stmt 1 view .LVU335
+ 1331 0058 FFF7FEFF 		bl	Error_Handler
+ 1332              	.LVL94:
+ 1333              	.L94:
+ 241:Core/Src/main.c ****   }
+ 1334              		.loc 1 241 5 view .LVU336
+ 1335 005c FFF7FEFF 		bl	Error_Handler
+ 1336              	.LVL95:
+ 1337              	.L95:
+ 247:Core/Src/main.c ****   }
+ 1338              		.loc 1 247 5 view .LVU337
+ 1339 0060 FFF7FEFF 		bl	Error_Handler
+ 1340              	.LVL96:
+ 1341              	.L97:
+ 1342              		.align	2
+ 1343              	.L96:
+ 1344 0064 00000000 		.word	htim2
+ 1345              		.cfi_endproc
+ 1346              	.LFE68:
+ 1348              		.section	.text.SystemClock_Config,"ax",%progbits
+ 1349              		.align	1
+ 1350              		.global	SystemClock_Config
+ 1351              		.syntax unified
+ 1352              		.thumb
+ 1353              		.thumb_func
+ 1355              	SystemClock_Config:
+ 1356              	.LFB66:
+ 135:Core/Src/main.c ****   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
+ 1357              		.loc 1 135 1 view -0
+ 1358              		.cfi_startproc
+ 1359              		@ args = 0, pretend = 0, frame = 64
+ 1360              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1361 0000 00B5     		push	{lr}
+ 1362              	.LCFI25:
+ 1363              		.cfi_def_cfa_offset 4
+ 1364              		.cfi_offset 14, -4
+ 1365 0002 91B0     		sub	sp, sp, #68
+ 1366              	.LCFI26:
+ 1367              		.cfi_def_cfa_offset 72
+ 136:Core/Src/main.c ****   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
+ 1368              		.loc 1 136 3 view .LVU339
+ 136:Core/Src/main.c ****   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
+ 1369              		.loc 1 136 22 is_stmt 0 view .LVU340
+ 1370 0004 2822     		movs	r2, #40
+ 1371 0006 0021     		movs	r1, #0
+ 1372 0008 06A8     		add	r0, sp, #24
+ 1373 000a FFF7FEFF 		bl	memset
+ 1374              	.LVL97:
+ 137:Core/Src/main.c **** 
+ 1375              		.loc 1 137 3 is_stmt 1 view .LVU341
+ 137:Core/Src/main.c **** 
+ 1376              		.loc 1 137 22 is_stmt 0 view .LVU342
+ 1377 000e 0023     		movs	r3, #0
+ 1378 0010 0193     		str	r3, [sp, #4]
+ 1379 0012 0293     		str	r3, [sp, #8]
+ 1380 0014 0393     		str	r3, [sp, #12]
+ 1381 0016 0493     		str	r3, [sp, #16]
+ARM GAS  C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s 			page 40
+
+
+ 1382 0018 0593     		str	r3, [sp, #20]
+ 142:Core/Src/main.c ****   RCC_OscInitStruct.HSEState = RCC_HSE_ON;
+ 1383              		.loc 1 142 3 is_stmt 1 view .LVU343
+ 142:Core/Src/main.c ****   RCC_OscInitStruct.HSEState = RCC_HSE_ON;
+ 1384              		.loc 1 142 36 is_stmt 0 view .LVU344
+ 1385 001a 0122     		movs	r2, #1
+ 1386 001c 0692     		str	r2, [sp, #24]
+ 143:Core/Src/main.c ****   RCC_OscInitStruct.HSEPredivValue = RCC_HSE_PREDIV_DIV1;
+ 1387              		.loc 1 143 3 is_stmt 1 view .LVU345
+ 143:Core/Src/main.c ****   RCC_OscInitStruct.HSEPredivValue = RCC_HSE_PREDIV_DIV1;
+ 1388              		.loc 1 143 30 is_stmt 0 view .LVU346
+ 1389 001e 4FF48033 		mov	r3, #65536
+ 1390 0022 0793     		str	r3, [sp, #28]
+ 144:Core/Src/main.c ****   RCC_OscInitStruct.HSIState = RCC_HSI_ON;
+ 1391              		.loc 1 144 3 is_stmt 1 view .LVU347
+ 145:Core/Src/main.c ****   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
+ 1392              		.loc 1 145 3 view .LVU348
+ 145:Core/Src/main.c ****   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
+ 1393              		.loc 1 145 30 is_stmt 0 view .LVU349
+ 1394 0024 0A92     		str	r2, [sp, #40]
+ 146:Core/Src/main.c ****   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
+ 1395              		.loc 1 146 3 is_stmt 1 view .LVU350
+ 146:Core/Src/main.c ****   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
+ 1396              		.loc 1 146 34 is_stmt 0 view .LVU351
+ 1397 0026 0222     		movs	r2, #2
+ 1398 0028 0D92     		str	r2, [sp, #52]
+ 147:Core/Src/main.c ****   RCC_OscInitStruct.PLL.PLLMUL = RCC_PLL_MUL9;
+ 1399              		.loc 1 147 3 is_stmt 1 view .LVU352
+ 147:Core/Src/main.c ****   RCC_OscInitStruct.PLL.PLLMUL = RCC_PLL_MUL9;
+ 1400              		.loc 1 147 35 is_stmt 0 view .LVU353
+ 1401 002a 0E93     		str	r3, [sp, #56]
+ 148:Core/Src/main.c ****   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
+ 1402              		.loc 1 148 3 is_stmt 1 view .LVU354
+ 148:Core/Src/main.c ****   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
+ 1403              		.loc 1 148 32 is_stmt 0 view .LVU355
+ 1404 002c 4FF4E013 		mov	r3, #1835008
+ 1405 0030 0F93     		str	r3, [sp, #60]
+ 149:Core/Src/main.c ****   {
+ 1406              		.loc 1 149 3 is_stmt 1 view .LVU356
+ 149:Core/Src/main.c ****   {
+ 1407              		.loc 1 149 7 is_stmt 0 view .LVU357
+ 1408 0032 06A8     		add	r0, sp, #24
+ 1409 0034 FFF7FEFF 		bl	HAL_RCC_OscConfig
+ 1410              	.LVL98:
+ 149:Core/Src/main.c ****   {
+ 1411              		.loc 1 149 6 view .LVU358
+ 1412 0038 80B9     		cbnz	r0, .L102
+ 156:Core/Src/main.c ****                               |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
+ 1413              		.loc 1 156 3 is_stmt 1 view .LVU359
+ 156:Core/Src/main.c ****                               |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
+ 1414              		.loc 1 156 31 is_stmt 0 view .LVU360
+ 1415 003a 0F23     		movs	r3, #15
+ 1416 003c 0193     		str	r3, [sp, #4]
+ 158:Core/Src/main.c ****   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
+ 1417              		.loc 1 158 3 is_stmt 1 view .LVU361
+ 158:Core/Src/main.c ****   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
+ 1418              		.loc 1 158 34 is_stmt 0 view .LVU362
+ARM GAS  C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s 			page 41
+
+
+ 1419 003e 0221     		movs	r1, #2
+ 1420 0040 0291     		str	r1, [sp, #8]
+ 159:Core/Src/main.c ****   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV2;
+ 1421              		.loc 1 159 3 is_stmt 1 view .LVU363
+ 159:Core/Src/main.c ****   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV2;
+ 1422              		.loc 1 159 35 is_stmt 0 view .LVU364
+ 1423 0042 0023     		movs	r3, #0
+ 1424 0044 0393     		str	r3, [sp, #12]
+ 160:Core/Src/main.c ****   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
+ 1425              		.loc 1 160 3 is_stmt 1 view .LVU365
+ 160:Core/Src/main.c ****   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
+ 1426              		.loc 1 160 36 is_stmt 0 view .LVU366
+ 1427 0046 4FF48062 		mov	r2, #1024
+ 1428 004a 0492     		str	r2, [sp, #16]
+ 161:Core/Src/main.c **** 
+ 1429              		.loc 1 161 3 is_stmt 1 view .LVU367
+ 161:Core/Src/main.c **** 
+ 1430              		.loc 1 161 36 is_stmt 0 view .LVU368
+ 1431 004c 0593     		str	r3, [sp, #20]
+ 163:Core/Src/main.c ****   {
+ 1432              		.loc 1 163 3 is_stmt 1 view .LVU369
+ 163:Core/Src/main.c ****   {
+ 1433              		.loc 1 163 7 is_stmt 0 view .LVU370
+ 1434 004e 01A8     		add	r0, sp, #4
+ 1435 0050 FFF7FEFF 		bl	HAL_RCC_ClockConfig
+ 1436              	.LVL99:
+ 163:Core/Src/main.c ****   {
+ 1437              		.loc 1 163 6 view .LVU371
+ 1438 0054 20B9     		cbnz	r0, .L103
+ 167:Core/Src/main.c **** 
+ 1439              		.loc 1 167 1 view .LVU372
+ 1440 0056 11B0     		add	sp, sp, #68
+ 1441              	.LCFI27:
+ 1442              		.cfi_remember_state
+ 1443              		.cfi_def_cfa_offset 4
+ 1444              		@ sp needed
+ 1445 0058 5DF804FB 		ldr	pc, [sp], #4
+ 1446              	.L102:
+ 1447              	.LCFI28:
+ 1448              		.cfi_restore_state
+ 151:Core/Src/main.c ****   }
+ 1449              		.loc 1 151 5 is_stmt 1 view .LVU373
+ 1450 005c FFF7FEFF 		bl	Error_Handler
+ 1451              	.LVL100:
+ 1452              	.L103:
+ 165:Core/Src/main.c ****   }
+ 1453              		.loc 1 165 5 view .LVU374
+ 1454 0060 FFF7FEFF 		bl	Error_Handler
+ 1455              	.LVL101:
+ 1456              		.cfi_endproc
+ 1457              	.LFE66:
+ 1459              		.section	.text.main,"ax",%progbits
+ 1460              		.align	1
+ 1461              		.global	main
+ 1462              		.syntax unified
+ 1463              		.thumb
+ 1464              		.thumb_func
+ARM GAS  C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s 			page 42
+
+
+ 1466              	main:
+ 1467              	.LFB65:
+  90:Core/Src/main.c ****   /* USER CODE BEGIN 1 */
+ 1468              		.loc 1 90 1 view -0
+ 1469              		.cfi_startproc
+ 1470              		@ Volatile: function does not return.
+ 1471              		@ args = 0, pretend = 0, frame = 0
+ 1472              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1473 0000 08B5     		push	{r3, lr}
+ 1474              	.LCFI29:
+ 1475              		.cfi_def_cfa_offset 8
+ 1476              		.cfi_offset 3, -8
+ 1477              		.cfi_offset 14, -4
+  97:Core/Src/main.c **** 
+ 1478              		.loc 1 97 3 view .LVU376
+ 1479 0002 FFF7FEFF 		bl	HAL_Init
+ 1480              	.LVL102:
+ 103:Core/Src/main.c **** 
+ 1481              		.loc 1 103 3 view .LVU377
+ 1482 0006 FFF7FEFF 		bl	SystemClock_Config
+ 1483              	.LVL103:
+ 109:Core/Src/main.c ****   MX_TIM1_Init();
+ 1484              		.loc 1 109 3 view .LVU378
+ 1485 000a FFF7FEFF 		bl	MX_GPIO_Init
+ 1486              	.LVL104:
+ 110:Core/Src/main.c ****   MX_TIM2_Init();
+ 1487              		.loc 1 110 3 view .LVU379
+ 1488 000e FFF7FEFF 		bl	MX_TIM1_Init
+ 1489              	.LVL105:
+ 111:Core/Src/main.c ****   /* USER CODE BEGIN 2 */
+ 1490              		.loc 1 111 3 view .LVU380
+ 1491 0012 FFF7FEFF 		bl	MX_TIM2_Init
+ 1492              	.LVL106:
+ 113:Core/Src/main.c ****   HAL_GPIO_WritePin(TRIG_PORT, TRIG_PIN, GPIO_PIN_RESET);
+ 1493              		.loc 1 113 3 view .LVU381
+ 1494 0016 0848     		ldr	r0, .L107
+ 1495 0018 FFF7FEFF 		bl	HAL_TIM_Base_Start
+ 1496              	.LVL107:
+ 114:Core/Src/main.c ****   tm1637SetBrightness(8);
+ 1497              		.loc 1 114 3 view .LVU382
+ 1498 001c 0022     		movs	r2, #0
+ 1499 001e 4FF40071 		mov	r1, #512
+ 1500 0022 0648     		ldr	r0, .L107+4
+ 1501 0024 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 1502              	.LVL108:
+ 115:Core/Src/main.c ****   HAL_TIM_Base_Start_IT(&htim2);
+ 1503              		.loc 1 115 3 view .LVU383
+ 1504 0028 0820     		movs	r0, #8
+ 1505 002a FFF7FEFF 		bl	tm1637SetBrightness
+ 1506              	.LVL109:
+ 116:Core/Src/main.c ****   /* USER CODE END 2 */
+ 1507              		.loc 1 116 3 view .LVU384
+ 1508 002e 0448     		ldr	r0, .L107+8
+ 1509 0030 FFF7FEFF 		bl	HAL_TIM_Base_Start_IT
+ 1510              	.LVL110:
+ 1511              	.L105:
+ 121:Core/Src/main.c ****   {
+ARM GAS  C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s 			page 43
+
+
+ 1512              		.loc 1 121 3 discriminator 1 view .LVU385
+ 126:Core/Src/main.c ****   /* USER CODE END 3 */
+ 1513              		.loc 1 126 3 discriminator 1 view .LVU386
+ 121:Core/Src/main.c ****   {
+ 1514              		.loc 1 121 9 discriminator 1 view .LVU387
+ 1515 0034 FEE7     		b	.L105
+ 1516              	.L108:
+ 1517 0036 00BF     		.align	2
+ 1518              	.L107:
+ 1519 0038 00000000 		.word	htim1
+ 1520 003c 00080140 		.word	1073809408
+ 1521 0040 00000000 		.word	htim2
+ 1522              		.cfi_endproc
+ 1523              	.LFE65:
+ 1525              		.global	segmentMap
+ 1526              		.section	.rodata.segmentMap,"a"
+ 1527              		.align	2
+ 1530              	segmentMap:
+ 1531 0000 3F065B4F 		.ascii	"?\006[Ofm}\007\177o\000@"
+ 1531      666D7D07 
+ 1531      7F6F0040 
+ 1532              		.global	currentMillis
+ 1533              		.section	.bss.currentMillis,"aw",%nobits
+ 1534              		.align	2
+ 1537              	currentMillis:
+ 1538 0000 00000000 		.space	4
+ 1539              		.global	previousMillis
+ 1540              		.section	.bss.previousMillis,"aw",%nobits
+ 1541              		.align	2
+ 1544              	previousMillis:
+ 1545 0000 00000000 		.space	4
+ 1546              		.global	Flag
+ 1547              		.section	.bss.Flag,"aw",%nobits
+ 1550              	Flag:
+ 1551 0000 00       		.space	1
+ 1552              		.global	Temp
+ 1553              		.section	.bss.Temp,"aw",%nobits
+ 1554              		.align	1
+ 1557              	Temp:
+ 1558 0000 0000     		.space	2
+ 1559              		.global	Saved
+ 1560              		.section	.bss.Saved,"aw",%nobits
+ 1561              		.align	1
+ 1564              	Saved:
+ 1565 0000 0000     		.space	2
+ 1566              		.global	Distance
+ 1567              		.section	.bss.Distance,"aw",%nobits
+ 1568              		.align	1
+ 1571              	Distance:
+ 1572 0000 0000     		.space	2
+ 1573              		.global	Value2
+ 1574              		.section	.bss.Value2,"aw",%nobits
+ 1575              		.align	2
+ 1578              	Value2:
+ 1579 0000 00000000 		.space	4
+ 1580              		.global	Value1
+ 1581              		.section	.bss.Value1,"aw",%nobits
+ARM GAS  C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s 			page 44
+
+
+ 1582              		.align	2
+ 1585              	Value1:
+ 1586 0000 00000000 		.space	4
+ 1587              		.global	pMillis
+ 1588              		.section	.bss.pMillis,"aw",%nobits
+ 1589              		.align	2
+ 1592              	pMillis:
+ 1593 0000 00000000 		.space	4
+ 1594              		.global	htim2
+ 1595              		.section	.bss.htim2,"aw",%nobits
+ 1596              		.align	2
+ 1599              	htim2:
+ 1600 0000 00000000 		.space	72
+ 1600      00000000 
+ 1600      00000000 
+ 1600      00000000 
+ 1600      00000000 
+ 1601              		.global	htim1
+ 1602              		.section	.bss.htim1,"aw",%nobits
+ 1603              		.align	2
+ 1606              	htim1:
+ 1607 0000 00000000 		.space	72
+ 1607      00000000 
+ 1607      00000000 
+ 1607      00000000 
+ 1607      00000000 
+ 1608              		.text
+ 1609              	.Letext0:
+ 1610              		.file 3 "C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/CMSIS/Device/ST/STM32F
+ 1611              		.file 4 "c:\\arm-gnu-toolchain-12.2.rel1-mingw-w64-i686-arm-none-eabi\\arm-none-eabi\\include\\mac
+ 1612              		.file 5 "c:\\arm-gnu-toolchain-12.2.rel1-mingw-w64-i686-arm-none-eabi\\arm-none-eabi\\include\\sys
+ 1613              		.file 6 "C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/STM32F1xx_HAL_Driver/I
+ 1614              		.file 7 "C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/STM32F1xx_HAL_Driver/I
+ 1615              		.file 8 "C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/STM32F1xx_HAL_Driver/I
+ 1616              		.file 9 "C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/STM32F1xx_HAL_Driver/I
+ 1617              		.file 10 "C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/STM32F1xx_HAL_Driver/
+ 1618              		.file 11 "C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/STM32F1xx_HAL_Driver/
+ 1619              		.file 12 "C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/STM32F1xx_HAL_Driver/
+ 1620              		.file 13 "C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/STM32F1xx_HAL_Driver/
+ 1621              		.file 14 "C:/Users/vovua/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.4/Drivers/STM32F1xx_HAL_Driver/
+ 1622              		.file 15 "<built-in>"
+ARM GAS  C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s 			page 45
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 main.c
+C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s:19     .text.MX_GPIO_Init:00000000 $t
+C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s:24     .text.MX_GPIO_Init:00000000 MX_GPIO_Init
+C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s:198    .text.MX_GPIO_Init:000000d4 $d
+C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s:206    .text.HAL_GPIO_EXTI_Callback:00000000 $t
+C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s:212    .text.HAL_GPIO_EXTI_Callback:00000000 HAL_GPIO_EXTI_Callback
+C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s:276    .text.HAL_GPIO_EXTI_Callback:00000040 $d
+C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s:1537   .bss.currentMillis:00000000 currentMillis
+C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s:1544   .bss.previousMillis:00000000 previousMillis
+C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s:1571   .bss.Distance:00000000 Distance
+C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s:1564   .bss.Saved:00000000 Saved
+C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s:1550   .bss.Flag:00000000 Flag
+C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s:286    .text._tm1637DelayUsec:00000000 $t
+C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s:292    .text._tm1637DelayUsec:00000000 _tm1637DelayUsec
+C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s:318    .text._tm1637DelayUsec:00000010 $d
+C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s:1606   .bss.htim1:00000000 htim1
+C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s:323    .text._tm1637ClkHigh:00000000 $t
+C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s:329    .text._tm1637ClkHigh:00000000 _tm1637ClkHigh
+C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s:351    .text._tm1637ClkHigh:00000010 $d
+C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s:356    .text._tm1637ClkLow:00000000 $t
+C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s:362    .text._tm1637ClkLow:00000000 _tm1637ClkLow
+C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s:384    .text._tm1637ClkLow:00000010 $d
+C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s:389    .text._tm1637ReadResult:00000000 $t
+C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s:395    .text._tm1637ReadResult:00000000 _tm1637ReadResult
+C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s:429    .text._tm1637DioHigh:00000000 $t
+C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s:435    .text._tm1637DioHigh:00000000 _tm1637DioHigh
+C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s:457    .text._tm1637DioHigh:00000010 $d
+C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s:462    .text._tm1637DioLow:00000000 $t
+C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s:468    .text._tm1637DioLow:00000000 _tm1637DioLow
+C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s:490    .text._tm1637DioLow:00000010 $d
+C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s:495    .text._tm1637Start:00000000 $t
+C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s:501    .text._tm1637Start:00000000 _tm1637Start
+C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s:531    .text._tm1637Stop:00000000 $t
+C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s:537    .text._tm1637Stop:00000000 _tm1637Stop
+C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s:578    .text._tm1637WriteByte:00000000 $t
+C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s:584    .text._tm1637WriteByte:00000000 _tm1637WriteByte
+C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s:656    .text.tm1637DisplayDecimal:00000000 $t
+C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s:662    .text.tm1637DisplayDecimal:00000000 tm1637DisplayDecimal
+C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s:849    .text.tm1637DisplayDecimal:000000c4 $d
+C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s:1530   .rodata.segmentMap:00000000 segmentMap
+C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s:855    .text.HAL_TIM_PeriodElapsedCallback:00000000 $t
+C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s:861    .text.HAL_TIM_PeriodElapsedCallback:00000000 HAL_TIM_PeriodElapsedCallback
+C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s:1027   .text.HAL_TIM_PeriodElapsedCallback:000000c8 $d
+C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s:1592   .bss.pMillis:00000000 pMillis
+C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s:1585   .bss.Value1:00000000 Value1
+C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s:1578   .bss.Value2:00000000 Value2
+C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s:1557   .bss.Temp:00000000 Temp
+C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s:1041   .text.tm1637SetBrightness:00000000 $t
+C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s:1047   .text.tm1637SetBrightness:00000000 tm1637SetBrightness
+C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s:1081   .text.Error_Handler:00000000 $t
+C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s:1087   .text.Error_Handler:00000000 Error_Handler
+C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s:1119   .text.MX_TIM1_Init:00000000 $t
+C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s:1124   .text.MX_TIM1_Init:00000000 MX_TIM1_Init
+C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s:1230   .text.MX_TIM1_Init:00000064 $d
+C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s:1236   .text.MX_TIM2_Init:00000000 $t
+C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s:1241   .text.MX_TIM2_Init:00000000 MX_TIM2_Init
+ARM GAS  C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s 			page 46
+
+
+C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s:1344   .text.MX_TIM2_Init:00000064 $d
+C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s:1599   .bss.htim2:00000000 htim2
+C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s:1349   .text.SystemClock_Config:00000000 $t
+C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s:1355   .text.SystemClock_Config:00000000 SystemClock_Config
+C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s:1460   .text.main:00000000 $t
+C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s:1466   .text.main:00000000 main
+C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s:1519   .text.main:00000038 $d
+C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s:1527   .rodata.segmentMap:00000000 $d
+C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s:1534   .bss.currentMillis:00000000 $d
+C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s:1541   .bss.previousMillis:00000000 $d
+C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s:1551   .bss.Flag:00000000 $d
+C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s:1554   .bss.Temp:00000000 $d
+C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s:1561   .bss.Saved:00000000 $d
+C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s:1568   .bss.Distance:00000000 $d
+C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s:1575   .bss.Value2:00000000 $d
+C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s:1582   .bss.Value1:00000000 $d
+C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s:1589   .bss.pMillis:00000000 $d
+C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s:1596   .bss.htim2:00000000 $d
+C:\Users\vovua\AppData\Local\Temp\cc8YUj5P.s:1603   .bss.htim1:00000000 $d
+
+UNDEFINED SYMBOLS
+HAL_GPIO_WritePin
+HAL_GPIO_Init
+HAL_NVIC_SetPriority
+HAL_NVIC_EnableIRQ
+HAL_GetTick
+HAL_GPIO_TogglePin
+HAL_GPIO_ReadPin
+HAL_TIM_Base_Init
+HAL_TIM_ConfigClockSource
+HAL_TIMEx_MasterConfigSynchronization
+memset
+HAL_RCC_OscConfig
+HAL_RCC_ClockConfig
+HAL_Init
+HAL_TIM_Base_Start
+HAL_TIM_Base_Start_IT

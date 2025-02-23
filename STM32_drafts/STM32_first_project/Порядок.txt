@@ -1,0 +1,36 @@
+!!!ОБНОВИТЬ ПРОШИВКУ программатора через C:\Users\vovua\Desktop\ST-LINK V2\stsw-link007V2J28M18RC2\Windows
+C:\stlink-1.7.0-x86_64-w64-mingw32\bin\st-info --probe
+(драйвер для программатора dpinst_amd64.exe в папке ST-LINK V2 на рабочем столе)
+
+CubeMX
+access to mcu selector
+сверху слева part number stm32f103c8t6 - найти в списке снизу и start project
+настроить пины на схемке (н-р, PC13 на GPIO Output)
+Слева System core -> sys -> debug -> serial wire
+Сверху project manager - путь + toolchain/IDE поставить makefile + слева code generator поставить add necessary...
+generate code сверху справа
+
+main.c в папке с проектом в core\src
+------------------------------------
+например мигание светодиодом
+while (1)
+  {
+    /* USER CODE END WHILE */
+    HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
+    HAL_Delay(1000);
+    /* USER CODE BEGIN 3 */
+  }
+------------------------------------
+
+C:\MinGWold\mingw32\bin\mingw32-make
+C:\stlink-1.7.0-x86_64-w64-mingw32\bin\st-flash --reset write build\test.bin 0x8000000
+
+папка bin компилятора для arm должна быть добавлена в PATH
+
+test - название проекта, то есть в папке build после make будет единственный bin файл
+его и надо указать st-flash
+
+Базовые вещи (ШИМ, прерывания, таймеры и т.д.) с настройками в CubeMX и готовым кодом
+https://www.micropeta.com/
+https://www.youtube.com/@NizarMohideen
+https://www.youtube.com/playlist?list=PL5e8EBlOu5_P_RV5HJfVLYniii4qZYcp4
