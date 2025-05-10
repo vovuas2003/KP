@@ -13,7 +13,13 @@ start "" "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" --proxy-s
 https://github.com/xvzc/SpoofDPI/releases/tag/v0.12.0
 spoofdpi-windows-amd64.exe (rename to spoofdpi.exe)
 https://github.com/xvzc/SpoofDPI/issues/281
-spoofdpi.exe -dns-addr 9.9.9.9 -enable-doh -window-size=1
+spoofdpi.exe -dns-addr 9.9.9.9 -enable-doh -window-size 1
 one-click solution (bat):
-start "Close after exiting Google Chrome" spoofdpi.exe -dns-addr 9.9.9.9 -enable-doh -window-size=1
+start "Close after exiting Google Chrome" spoofdpi.exe -dns-addr 9.9.9.9 -enable-doh -window-size 1
 start "" "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" --proxy-server="http://127.0.0.1:8080"
+
+(for Linux in FireFox settings find proxy and type 127.0.0.1:8080, choose socks5 if you need)
+example of run.sh (!#/bin/bash and chmod +x of course) for GoogleChrome (install official packet), ctrl+c to kill both processes:
+string_for_startup_proxy &
+google-chrome-stable --proxy-server="your_settings" &
+wait
