@@ -1,4 +1,6 @@
 /*
+bus_number and device_number (from lsusb -t) version
+
 compilation
 gcc -Wall -Wextra led_rtl8153_new.c -lusb-1.0 -o led_rtl8153_new
 if cannot compile: sudo apt install libusb-1.0-0-dev
@@ -8,6 +10,8 @@ help: ./led_rtl8153_new
 read: sudo ./led_rtl8153_new 6 3
 write: sudo ./led_rtl8153_new 6 3 0x000e0f00
 if cannot run: sudo apt install libusb-1.0-0
+
+add to udev rules for autostart
 */
 
 #include <libusb-1.0/libusb.h>
