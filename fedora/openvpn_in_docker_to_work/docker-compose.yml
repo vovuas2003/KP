@@ -1,0 +1,23 @@
+services:
+  vpn:
+    build: .
+    image: openvpn-socks5-socat:local
+    container_name: work_tunnel
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun
+    volumes:
+      - ./config_with_creds_path_to_etc_openvpn_login_txt.ovpn:/etc/openvpn/vpn.conf:ro
+      - ./login.txt:/etc/openvpn/login.txt:ro
+    ports:
+      - "127.0.0.1:2222:1080"
+      - "127.0.0.1:4455:445"
+    environment:
+      - OPENVPN_CONFIG=/etc/openvpn/vpn.conf
+    entrypoint: >
+      sh -c "
+      socat TCP-LISTEN:445,fork,reuseaddr TCP:192.168.49.200:445 &
+      exec /usr/local/bin/entrypoint.sh
+      "
+    restart: unless-stopped

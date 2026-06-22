@@ -1,0 +1,24 @@
+# sudo dnf install make
+
+# RTC in UTC
+sudo timedatectl set-local-rtc 0
+
+# sudo without password
+sudo visudo
+# all is obvious, just comment one line and uncomment another one
+#================================================================
+## Allows people in group wheel to run all commands
+#%wheel ALL=(ALL)       ALL
+
+## Same thing without a password
+%wheel  ALL=(ALL)       NOPASSWD: ALL
+#================================================================
+
+# 2FA (sudo dnf install oathtool xclip)
+oathtool -b --totp @github_totp.txt | xclip -selection clipboard
+
+# Customize GNOME
+## Settings -> Keyboard -> Shortcuts: Navigation - switch applications super+tab, switch windows alt+tab; Custom - ptyxis --new-window ctrl+alt+t
+## Tweaks: Windows -> Titlebar Buttons
+## Extension Manager: Dash to Dock, AppIndicator and KStatusNotifierItem Support
+### Dash to Dock: Position and size - left, extend, fixed icon size, Launchers - disable "Show trash can", Behavior - click action "Show window previews", Appearance - customize window counter indicators "Dots"

@@ -1,0 +1,22 @@
+# ~/.ssh/config
+# ssh-keygen -t ed25519 -C "comment"
+
+Host *
+    IdentitiesOnly yes
+
+Host github.com
+    HostName github.com
+    User git
+    IdentityFile ~/.ssh/github
+
+Host work
+    HostName 192.168.51.213
+    User user
+    IdentityFile ~/.ssh/work
+    ProxyCommand ncat --proxy 127.0.0.1:2222 --proxy-type socks5 %h %p
+
+Host gitlab.mycompany.domain
+    HostName gitlab.mycompany.domain
+    User git
+    IdentityFile ~/.ssh/gitlab
+    ProxyCommand ncat --proxy 127.0.0.1:2222 --proxy-type socks5 %h %p

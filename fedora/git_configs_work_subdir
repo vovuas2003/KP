@@ -1,0 +1,12 @@
+# ~/.gitconfig
+[user]
+	name = personal_nickname
+	email = personal_email@site.domain
+
+[includeIf "gitdir:~/work/"]
+	path = ~/.gitconfig-work
+
+# ~/.gitconfig-work
+[user]
+	name = work_nickname
+	email = work_email@mycompany.domain

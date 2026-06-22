@@ -1,0 +1,10 @@
+# Of course, install Docker - check official cite; as for me, the best way is to add docker repo to dnf
+
+# Important string in config_with_creds_path_to_etc_openvpn_login_txt.ovpn (don't forget to create/rename openvpn config file and add/edit this string)
+auth-user-pass /etc/openvpn/login.txt
+
+# ssh (sftp, git), firefox and many other programs can use socks5 proxy (don't forget to proxy DNS too - sock5h)
+# specified openvpn image in docker manages routes with DNS and provides only socks5 proxy to host without any mess
+## check ../ssh_config for nice proxy config (according to man ncat, --proxy-dns remote by default), use profiles in firefox (native socks5+DNS support)
+# but the easiest way to use corporative-local samba share is forwarding necessary IP with standard port to localhost with any port
+# if you need just socks5 proxy, use clean image without socat (Dockerfile is unnecessary); don't forget to change docker-compose.yml too
