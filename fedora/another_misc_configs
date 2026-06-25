@@ -1,3 +1,5 @@
+# sudo dnf upgrade --exclude=openh264*
+
 # sudo dnf install make
 
 # RTC in UTC
