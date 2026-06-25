@@ -1,12 +1,12 @@
-FILE_MANAGER = nautilus
+FILE_MANAGER := nautilus
 
-DC = sudo docker compose
-SS = sudo systemctl
-DS = sudo docker system
+DC := sudo docker compose
+SS := sudo systemctl
+DS := sudo docker system
 
-SILENT_BG = > /dev/null 2>&1 &
+SILENT_BG := > /dev/null 2>&1 &
 
-LOGIN_PASSWORD_FILE = login.txt
+LOGIN_PASSWORD_FILE := login.txt
 
 .DEFAULT_GOAL := help
 
