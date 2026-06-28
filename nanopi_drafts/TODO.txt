@@ -1,0 +1,5 @@
+1. Check script_v3 (try WiFi 5GHz, ensure no ipv6 for router and clients, TODO inside script), drop ipv6 in nftables, maybe move interfaces names to variables (and how eth0/1 renamed in original image - ?udev?), how to use wlan1 as client (instead of eth0 with bigger metric), what module for my usb-wifi.
+2. How to save emmc.
+3. How to backup (and restore) or change (eth1 to static IP) rootfs image, what is userdata partition, difference between USB and SD images (and download SD images too; also check the latest images).
+4. Download systemd-resolved and hostapd deb packets for easy local install even on default image.
+5. Add xray-core (tun; socks5, http proxies ?with password?) as systemd unit (with ExecStart/StopPost for ip rule src_ip /25 to tun via additional route table), change DHCP range in script (finally when xray unit is active: 192.168.2.128/25 to tun, but not all 192.168.2.128/25 is DHCP to leave some space for static who wants transparent tun, and static clients in 192.168.2.0/25 will not use tun but can use proxies; when xray is off return to common routes).

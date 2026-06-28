@@ -1,0 +1,5 @@
+https://drive.google.com/drive/folders/17DfzT1JBvd3PigcOa0Rr05a0VygcL1cO
+
+https://wiki.friendlyelec.com/wiki/index.php/NanoPi_R3S
+
+I have LTS version, tested image rk3566-usb-debian-trixie-core-6.1-arm64-20260420
